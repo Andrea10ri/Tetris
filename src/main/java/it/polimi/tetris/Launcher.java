@@ -1,4 +1,4 @@
-package org.example.tetris;
+package it.polimi.tetris;
 
 import javafx.application.Application;
 

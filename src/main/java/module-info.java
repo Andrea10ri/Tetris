@@ -4,6 +4,6 @@ module org.example.tetris {
 
     requires org.controlsfx.controls;
 
-    opens org.example.tetris to javafx.fxml;
-    exports org.example.tetris;
+    opens it.polimi.tetris to javafx.fxml;
+    exports it.polimi.tetris;
 }
