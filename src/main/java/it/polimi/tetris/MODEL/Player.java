@@ -1,21 +1,21 @@
 package it.polimi.tetris.MODEL;
 
-import it.polimi.tetris.MODEL.ENUM.PlayerColor;
+import it.polimi.tetris.MODEL.ENUMS.PlayerColor;
 
 public class Player {
 
     //attributes
     private String nickname;
     private PlayerColor playerColor;
-    private TetrisBoard tetrisBoard;
-    private int score;
+    private TetrisMatch tetrisMatch;
+
 
     //constructor
-    public Player(String nickname, PlayerColor playerColor, TetrisBoard tetrisBoard, int score) {
+    public Player(String nickname, PlayerColor playerColor, TetrisMatch tetrisMatch) {
         this.nickname = nickname;
         this.playerColor = playerColor;
-        this.tetrisBoard = tetrisBoard;
-        this.score = score;
+        this.tetrisMatch = tetrisMatch;
+
     }
 
     public String getNickname() {
@@ -34,19 +34,12 @@ public class Player {
         this.playerColor = playerColor;
     }
 
-    public TetrisBoard getTetrisBoard() {
-        return tetrisBoard;
+    public TetrisMatch getTetrisMatch() {
+        return tetrisMatch;
     }
 
-    public void setTetrisBoard(TetrisBoard tetrisBoard) {
-        this.tetrisBoard = tetrisBoard;
+    public void setTetrisMatch(TetrisMatch tetrisMatch) {
+        this.tetrisMatch = tetrisMatch;
     }
 
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
 }

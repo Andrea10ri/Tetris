@@ -1,25 +1,28 @@
 package it.polimi.tetris.MODEL;
 
-import it.polimi.tetris.MODEL.ENUM.CellColor;
-import it.polimi.tetris.MODEL.ENUM.CellStatus;
+import it.polimi.tetris.MODEL.ENUMS.TetronimoColor;
+import it.polimi.tetris.MODEL.ENUMS.CellStatus;
 
+/*Unità minima della griglia. Contiene: se è occupata,
+il colore/tipo (normale, garbage da malus, bonus/malus),
+e riferimento all'effetto se è una cella speciale.*/
 public class Cell {
     //attributes
-    private CellColor cellColor;
+    private TetronimoColor cellColor;
     private Effect effect;
     private CellStatus status;
 
-    public Cell(CellColor cellColor, Effect effect, CellStatus status) {
+    public Cell(TetronimoColor cellColor, Effect effect, CellStatus status) {
         this.cellColor = cellColor;
         this.effect = effect;
         this.status = status;
     }
 
-    public CellColor getCellColor() {
+    public TetronimoColor getCellColor() {
         return cellColor;
     }
 
-    public void setCellColor(CellColor cellColor) {
+    public void setCellColor(TetronimoColor cellColor) {
         this.cellColor = cellColor;
     }
 

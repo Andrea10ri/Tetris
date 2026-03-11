@@ -1,4 +1,4 @@
-package it.polimi.tetris.MODEL.ENUM;
+package it.polimi.tetris.MODEL.ENUMS;
 
 public enum DurationTime {
     FIVE_MINUTES,

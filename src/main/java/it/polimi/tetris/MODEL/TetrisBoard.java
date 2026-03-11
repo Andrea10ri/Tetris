@@ -1,32 +1,25 @@
 package it.polimi.tetris.MODEL;
 
-
+/*La griglia di gioco (matrice di Cell).
+ Si occupa di: collision detection, piazzare un tetromino, cancellare righe completate,
+ aggiungere righe garbage dal basso,
+  e restituire quante righe sono state eliminate (serve a Game per la logica delle fasi).*/
 public class TetrisBoard {
 
     //attributes
-    private String imageUrl;
+
     private int Width;
     private int Height;
     private Cell [][] gridTable;
-    private Tetronimo currentPiece;
-    private Tetronimo nextPiece;
 
-    public TetrisBoard(String imageUrl, int width, int height, Cell[][] gridTable, Tetronimo currentPiece, Tetronimo nextPiece) {
-        this.imageUrl = imageUrl;
+
+    public TetrisBoard( int width, int height, Cell[][] gridTable) {
+
         Width = width;
         Height = height;
         this.gridTable = gridTable;
-        this.currentPiece = currentPiece;
-        this.nextPiece = nextPiece;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
 
     public int getWidth() {
         return Width;
@@ -52,19 +45,5 @@ public class TetrisBoard {
         this.gridTable = gridTable;
     }
 
-    public Tetronimo getCurrentPiece() {
-        return currentPiece;
-    }
 
-    public void setCurrentPiece(Tetronimo currentPiece) {
-        this.currentPiece = currentPiece;
-    }
-
-    public Tetronimo getNextPiece() {
-        return nextPiece;
-    }
-
-    public void setNextPiece(Tetronimo nextPiece) {
-        this.nextPiece = nextPiece;
-    }
 }

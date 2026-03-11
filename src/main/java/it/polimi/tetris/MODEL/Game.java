@@ -1,11 +1,15 @@
 package it.polimi.tetris.MODEL;
 
-import it.polimi.tetris.MODEL.ENUM.DurationTime;
-import it.polimi.tetris.MODEL.ENUM.GameStatus;
+import it.polimi.tetris.MODEL.ENUMS.DurationTime;
+import it.polimi.tetris.MODEL.ENUMS.GameStatus;
 
 import java.util.ArrayList;
 import java.util.Timer;
 
+/*Il contesto multiplayer. Gestisce: la lista di TetrisGame
+(uno per giocatore), il timer globale della partita, la fase corrente (1/2/3)
+e il suo avanzamento, il ranking/punteggi, e la distribuzione degli effetti —
+ovvero quando un Effect viene triggerato, è Game che chiama apply(source, targets) passando gli avversari giusti.*/
 public class Game {
 
     //attributes
@@ -14,7 +18,8 @@ public class Game {
     private Timer remainingTime; //timer
     private DurationTime durationTime; // time of the match
     private Player [] ranking; //ranking of the match
-    private GameStatus gameStatus; //status of the game
+    private int gamePhase;
+
 
     //constructor
     public Game(int numOfPlayers, ArrayList<Player> players, Timer remainingTime, DurationTime durationTime, Player[] ranking, GameStatus gameStatus) {
@@ -23,7 +28,7 @@ public class Game {
         this.remainingTime = remainingTime;
         this.durationTime = durationTime;
         this.ranking = ranking;
-        this.gameStatus = gameStatus;
+
     }
 
     //getter and setter
@@ -67,11 +72,5 @@ public class Game {
         this.ranking = ranking;
     }
 
-    public GameStatus getGameStatus() {
-        return gameStatus;
-    }
 
-    public void setGameStatus(GameStatus gameStatus) {
-        this.gameStatus = gameStatus;
-    }
 }
