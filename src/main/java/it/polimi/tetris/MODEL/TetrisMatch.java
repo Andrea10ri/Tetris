@@ -6,7 +6,6 @@ import it.polimi.tetris.MODEL.ENUMS.TetronimoType;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Timer;
 
 /*Il Tetris di un singolo giocatore.
  Gestisce: spawn del tetromino corrente e del next, movimento e rotazione,
@@ -211,6 +210,61 @@ public class TetrisMatch {
                 break;
         }
     }
+
+
+    public void TryRotateClockwise() {
+        Tetronimo rotated = currentTetronimo.Copy();
+        rotated.RotateClockwise();
+        if (tetrisBoard.IsValidPosition(rotated))
+            currentTetronimo = rotated;
+
+        else
+            System.out.println("ClockWise rotation fail");
+    }
+
+    public void TryRotateCounterClockwise() {
+        Tetronimo rotated = currentTetronimo.Copy();
+        rotated.RotateCounterClockwise();
+        if (tetrisBoard.IsValidPosition(rotated))
+            currentTetronimo = rotated;
+
+        else
+            System.out.println("CounterClockWise rotation fail");
+    }
+
+    //Movimento laterale
+    public void MoveLeft() {
+        Tetronimo moved = currentTetronimo.Copy();
+        moved.setX(moved.getX() - 1);
+        if (tetrisBoard.IsValidPosition(moved))
+            currentTetronimo = moved;
+
+        else
+            System.out.println("Left move fail");
+    }
+
+    public void MoveRight() {
+        Tetronimo moved = currentTetronimo.Copy();
+        moved.setX(moved.getX() + 1);
+        if (tetrisBoard.IsValidPosition(moved))
+            currentTetronimo = moved;
+
+        else
+            System.out.println("Right move fail");
+    }
+
+    //Caduta
+    public void MoveDown() {
+        Tetronimo moved = currentTetronimo.Copy();
+        moved.setY(moved.getY() + 1);
+        if (tetrisBoard.IsValidPosition(moved))
+            currentTetronimo = moved;
+        else
+            //quando non puó scenere allora piazza il tetronimo
+            tetrisBoard.PlaceTetronimo(currentTetronimo);
+    }
+
+
 
 }
 

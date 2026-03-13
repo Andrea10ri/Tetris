@@ -91,4 +91,39 @@ public class Tetronimo {
 
     //Methods
 
+
+    //ruota la shape 90° in senso orario
+    public void RotateClockwise() {
+        int rows = shape.length;
+        int cols = shape[0].length;
+        int[][] rotated = new int[cols][rows];
+
+        for (int r = 0; r < rows; r++)
+            for (int c = 0; c < cols; c++)
+                rotated[c][rows - 1 - r] = shape[r][c];
+
+        this.shape = rotated;
+    }
+
+    //ruota la shape 90° in senso antiorario
+    public void RotateCounterClockwise() {
+        int rows = shape.length;
+        int cols = shape[0].length;
+        int[][] rotated = new int[cols][rows];
+
+        for (int r = 0; r < rows; r++)
+            for (int c = 0; c < cols; c++)
+                rotated[cols - 1 - c][r] = shape[r][c];
+
+        this.shape = rotated;
+    }
+
+    //metodo che serve per poter avere una copia del tetronimo su cui fare collision detection
+    public Tetronimo Copy() {
+        int[][] shapeCopy = new int[shape.length][shape[0].length];
+        for (int r = 0; r < shape.length; r++)
+            shapeCopy[r] = shape[r].clone();
+
+        return new Tetronimo(type, x, y, shapeCopy, tetronimoColor, hasEffect, effect);
+    }
 }

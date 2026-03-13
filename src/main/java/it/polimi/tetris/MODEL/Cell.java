@@ -41,4 +41,21 @@ public class Cell {
     public void setStatus(CellStatus status) {
         this.status = status;
     }
+
+
+    public boolean IsEmpty() {
+        return this.status == CellStatus.EMPTY;
+    }
+
+    public void Occupy(TetronimoColor color, Effect effect) {
+        this.status = CellStatus.OCCUPIED;
+        this.cellColor = color;
+        this.effect = effect;
+    }
+
+    public void Clear() {
+        this.status = CellStatus.EMPTY;
+        this.cellColor = null;
+        this.effect = null;
+    }
 }
