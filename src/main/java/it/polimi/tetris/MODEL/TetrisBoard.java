@@ -1,5 +1,10 @@
 package it.polimi.tetris.MODEL;
 
+import it.polimi.tetris.MODEL.ENUMS.CellStatus;
+import it.polimi.tetris.MODEL.ENUMS.TetronimoColor;
+
+import java.util.Random;
+
 /*La griglia di gioco (matrice di Cell).
  Si occupa di: collision detection, piazzare un tetromino, cancellare righe completate,
  aggiungere righe garbage dal basso,
@@ -45,6 +50,7 @@ public class TetrisBoard {
         this.gridTable = gridTable;
     }
 
+    //METHODS
 
     public boolean IsValidPosition(Tetronimo t) {
         int[][] shape = t.getShape();
@@ -97,5 +103,93 @@ public class TetrisBoard {
                 gridTable[boardRow][boardCol].Occupy(t.getTetronimoColor(), t.getEffect());
             }
         }
+    }
+
+    // shifta tutte le righe verso l'alto di 1
+    public void AddGarbageRow() {
+
+        for (int r = 0; r < Height - 1; r++) {
+            for (int c = 0; c < Width; c++) {
+                gridTable[r][c] = gridTable[r + 1][c];
+            }
+        }
+
+        // costruisce la nuova riga garbage in fondo con un buco casuale
+        Random random = new Random();
+        int holeCol = random.nextInt(Width); // colonna che resta vuota
+
+        for (int c = 0; c < Width; c++) {
+            if (c == holeCol)
+                gridTable[Height - 1][c] = new Cell(null, null, CellStatus.EMPTY);
+            else
+                gridTable[Height - 1][c] = new Cell(TetronimoColor.GREY, null, CellStatus.OCCUPIED);
+        }
+    }
+
+    public void RemoveBottomRow() {
+        // shifta tutte le righe verso il basso di 1
+        for (int r = Height - 1; r > 0; r--) {
+            for (int c = 0; c < Width; c++) {
+                gridTable[r][c] = gridTable[r - 1][c];
+            }
+        }
+        // la riga 0 diventa vuota
+        for (int c = 0; c < Width; c++) {
+            gridTable[0][c] = new Cell(null, null, CellStatus.EMPTY);
+        }
+    }
+
+    public int ClearFullRows() {
+        int clearedRows = 0;
+
+        for (int r = Height - 1; r >= 0; r--) {
+
+            // controlla se la riga è piena
+            boolean isFull = true;
+            for (int c = 0; c < Width; c++) {
+                if (gridTable[r][c].IsEmpty()) {
+                    isFull = false;
+                    break;
+                }
+            }
+
+            if (isFull) {
+                //shifta tutte le righe sopra verso il basso di 1
+                for (int row = r; row > 0; row--) {
+                    for (int c = 0; c < Width; c++) {
+                        gridTable[row][c] = gridTable[row - 1][c];
+                    }
+                }
+                // la riga 0 diventa vuota
+                for (int c = 0; c < Width; c++) {
+                    gridTable[0][c] = new Cell(null, null, CellStatus.EMPTY);
+                }
+
+                clearedRows++;
+                r++; // ricontrolla la stessa riga perché è scesa una nuova
+            }
+        }
+        return clearedRows;
+    }
+
+    public boolean IsGameOver() {
+        // controlla se la riga 0 ha almeno una cella occupata
+        for (int c = 0; c < Width; c++) {
+            if (!gridTable[0][c].IsEmpty())
+                return true;
+        }
+        return false;
+    }
+
+    public int GetGhostPieceY(Tetronimo t) {
+        Tetronimo ghost = t.Copy();
+
+        // scende finché può
+        while (IsValidPosition(ghost)) {
+            ghost.setY(ghost.getY() + 1);
+        }
+
+        // torna su di 1 perché l'ultima posizione era invalida
+        return ghost.getY() - 1;
     }
 }

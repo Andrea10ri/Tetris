@@ -211,6 +211,17 @@ public class TetrisMatch {
         }
     }
 
+    public void SpawnNextTetronimo() {
+        // il next diventa il current
+        currentTetronimo = nextTetronimo;
+
+        // posiziona il tetronimo in cima alla board al centro
+        currentTetronimo.setX(tetrisBoard.getWidth() / 2 - currentTetronimo.getShape()[0].length / 2);
+        currentTetronimo.setY(0);
+
+        // genera il prossimo
+        GenerateNextTetronimo();
+    }
 
     public void TryRotateClockwise() {
         Tetronimo rotated = currentTetronimo.Copy();
@@ -262,6 +273,12 @@ public class TetrisMatch {
         else
             //quando non puó scenere allora piazza il tetronimo
             tetrisBoard.PlaceTetronimo(currentTetronimo);
+    }
+
+    public Tetronimo GetGhostTetronimo() {
+        Tetronimo ghost = currentTetronimo.Copy();
+        ghost.setY(tetrisBoard.GetGhostPieceY(currentTetronimo));
+        return ghost;
     }
 
 

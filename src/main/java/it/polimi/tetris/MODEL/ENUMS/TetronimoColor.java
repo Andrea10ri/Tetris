@@ -7,5 +7,6 @@ public enum TetronimoColor {
     YELLOW,
     GREEN,
     PURPLE,
-    RED;
+    RED,
+    GREY;
 }
