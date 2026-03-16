@@ -1,7 +1,8 @@
 package it.polimi.tetris.MODEL.ENUMS;
 
-public enum GameStatus {
+public enum LobbyStatus
+{
     WAITING,
-    RUNNING,
-    ENDED;
+    FULL,
+    IN_GAME;
 }

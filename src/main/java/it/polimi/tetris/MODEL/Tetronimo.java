@@ -14,6 +14,8 @@ public class Tetronimo {
     private TetronimoColor tetronimoColor;
     private boolean hasEffect;
     private Effect effect;
+    private int xEffect;
+    private int yEffect;
 
     public Tetronimo(TetronimoType type, int x, int y, int[][] shape, TetronimoColor tetronimoColor, boolean hasEffect, Effect effect) {
         this.type = type;
@@ -31,6 +33,38 @@ public class Tetronimo {
         this.tetronimoColor = tetronimoColor;
         this.hasEffect = hasEffect;
 
+
+    }
+
+    public Tetronimo(TetronimoType type, int[][] shape, TetronimoColor tetronimoColor, boolean hasEffect, int xEffect, int yEffect, Effect effect) {
+        this.type = type;
+        this.shape = shape;
+        this.tetronimoColor = tetronimoColor;
+        this.hasEffect = hasEffect;
+        this.xEffect = xEffect; //coordinata della shape in cui c'è l,effect
+        this.yEffect = yEffect;
+        this.effect = effect;
+
+    }
+
+    public boolean isHasEffect() {
+        return hasEffect;
+    }
+
+    public int getxEffect() {
+        return xEffect;
+    }
+
+    public void setxEffect(int xEffect) {
+        this.xEffect = xEffect;
+    }
+
+    public int getyEffect() {
+        return yEffect;
+    }
+
+    public void setyEffect(int yEffect) {
+        this.yEffect = yEffect;
     }
 
     public TetronimoType getType() {

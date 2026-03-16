@@ -2,12 +2,14 @@ package it.polimi.tetris.MODEL;
 
 import it.polimi.tetris.MODEL.ENUMS.EffectType;
 
-public class Effect {
+import java.util.List;
+
+public abstract class Effect {
 
     //attributes
-    protected EffectType effectType;
-    protected boolean isActive;
-    protected String imageUrl;
+    protected EffectType effectType; //bonus or malus
+    protected boolean isActive;  //it's needed for those effects that persist in time
+    protected String imageUrl; // a little image representing the effect
 
     public Effect(EffectType effectType, boolean isActive, String imageUrl) {
         this.effectType = effectType;
@@ -38,4 +40,9 @@ public class Effect {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public void Tick() {}
+
+    public abstract void Apply(TetrisMatch source, List<TetrisMatch> targets);
+
 }

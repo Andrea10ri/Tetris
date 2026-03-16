@@ -11,6 +11,11 @@ public class Player {
 
 
     //constructor
+    public Player () {
+        this.nickname = null;
+        this.playerColor = null;
+        this.tetrisMatch = null;
+    }
     public Player(String nickname, PlayerColor playerColor, TetrisMatch tetrisMatch) {
         this.nickname = nickname;
         this.playerColor = playerColor;

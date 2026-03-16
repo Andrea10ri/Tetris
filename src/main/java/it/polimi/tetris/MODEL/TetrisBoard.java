@@ -3,6 +3,8 @@ package it.polimi.tetris.MODEL;
 import it.polimi.tetris.MODEL.ENUMS.CellStatus;
 import it.polimi.tetris.MODEL.ENUMS.TetronimoColor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /*La griglia di gioco (matrice di Cell).
@@ -16,6 +18,7 @@ public class TetrisBoard {
     private int Width;
     private int Height;
     private Cell [][] gridTable;
+    private ArrayList<Effect> triggeredEffects = new ArrayList<>();
 
 
     public TetrisBoard( int width, int height, Cell[][] gridTable) {
@@ -48,6 +51,10 @@ public class TetrisBoard {
 
     public void setGridTable(Cell[][] gridTable) {
         this.gridTable = gridTable;
+    }
+
+    public List<Effect> GetTriggeredEffects() {
+        return triggeredEffects;
     }
 
     //METHODS
@@ -93,14 +100,16 @@ public class TetrisBoard {
         for (int r = 0; r < shape.length; r++) {
             for (int c = 0; c < shape[0].length; c++) {
 
-                //considero solo le celle occupate del tetromino
-                if (shape[r][c] == 0)
-                    continue;
+                if (shape[r][c] == 0) continue;
 
                 int boardRow = tY + r;
                 int boardCol = tX + c;
 
-                gridTable[boardRow][boardCol].Occupy(t.getTetronimoColor(), t.getEffect());
+                // se è la cella speciale passa l'effetto, altrimenti null
+                if (t.getHasEffect() && r == t.getyEffect() && c == t.getxEffect())
+                    gridTable[boardRow][boardCol].Occupy(t.getTetronimoColor(), t.getEffect());
+                else
+                    gridTable[boardRow][boardCol].Occupy(t.getTetronimoColor(), null);
             }
         }
     }
@@ -140,6 +149,8 @@ public class TetrisBoard {
     }
 
     public int ClearFullRows() {
+        triggeredEffects.clear(); // pulisce gli effetti triggerati dal turno precedente
+
         int clearedRows = 0;
 
         for (int r = Height - 1; r >= 0; r--) {
@@ -154,12 +165,19 @@ public class TetrisBoard {
             }
 
             if (isFull) {
-                //shifta tutte le righe sopra verso il basso di 1
+                // prima di cancellare la riga, salva gli effetti trovati nelle celle
+                for (int c = 0; c < Width; c++) {
+                    if (gridTable[r][c].getEffect() != null)
+                        triggeredEffects.add(gridTable[r][c].getEffect());
+                }
+
+                // shifta tutte le righe sopra verso il basso di 1
                 for (int row = r; row > 0; row--) {
                     for (int c = 0; c < Width; c++) {
                         gridTable[row][c] = gridTable[row - 1][c];
                     }
                 }
+
                 // la riga 0 diventa vuota
                 for (int c = 0; c < Width; c++) {
                     gridTable[0][c] = new Cell(null, null, CellStatus.EMPTY);
@@ -170,6 +188,16 @@ public class TetrisBoard {
             }
         }
         return clearedRows;
+    }
+
+    public void ExplodeCells(int row, int col, int radius) {
+        for (int r = row - radius; r <= row + radius; r++) {
+            for (int c = col - radius; c <= col + radius; c++) {
+                // controlla che la cella sia dentro i bordi della board
+                if (r >= 0 && r < Height && c >= 0 && c < Width)
+                    gridTable[r][c].Clear();
+            }
+        }
     }
 
     public boolean IsGameOver() {
