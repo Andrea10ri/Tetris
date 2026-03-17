@@ -56,6 +56,30 @@ public class Lobby {
         this.durationTime = durationTime;
     }
 
+    public String getLobbyId() {
+        return lobbyId;
+    }
+
+    public void setLobbyId(String lobbyId) {
+        this.lobbyId = lobbyId;
+    }
+
+    public Player getHost() {
+        return host;
+    }
+
+    public void setHost(Player host) {
+        this.host = host;
+    }
+
+    public LobbyStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(LobbyStatus status) {
+        this.status = status;
+    }
+
     //METHODS
 
     public void AddPlayer(Player player) {

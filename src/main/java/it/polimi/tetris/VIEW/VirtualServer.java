@@ -1,5 +1,6 @@
 package it.polimi.tetris.VIEW;
 
+import it.polimi.tetris.CONTROLLER.ClientThread;
 import javafx.stage.Stage;
 
 import java.io.BufferedReader;
@@ -86,5 +87,42 @@ public class VirtualServer {
         this.stage = stage;
     }
 
+   // Methods
+    /**
+     * Connects to the server
+     */
+    private void Connect(){
+        try {
+            this.socket = new Socket(serverName, serverPort);
+        } catch (IOException e) {
+            System.err.println("Impossible to connect to: " + serverName);
+            System.exit(0);
+        }
+    }
 
+    /**
+     * Initializes the communication buffers
+     */
+    private void SetBuffers(){
+        try {
+            out=new PrintWriter(socket.getOutputStream(),true);
+            in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+
+        } catch (IOException e) {
+            System.err.println( "Error during buffers settings ");
+            System.exit(0);
+        }
+    }
+
+    /**
+     * Start virtual server and client thread
+     */
+    public void Start() {
+        Connect();
+        SetBuffers();
+
+        // Start client thread
+        this.clientThread = new ClientThread(this.in,this.stage, this);
+        this.clientThread.start();
+    }
 }
