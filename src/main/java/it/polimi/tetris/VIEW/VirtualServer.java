@@ -125,4 +125,16 @@ public class VirtualServer {
         this.clientThread = new ClientThread(this.in,this.stage, this);
         this.clientThread.start();
     }
+
+
+    /**
+     * <p>
+     * Writes message to the output buffer
+     * </p>
+     * @param message the string to send
+     */
+    public void Send(String message){
+
+        this.out.println(message);
+    }
 }

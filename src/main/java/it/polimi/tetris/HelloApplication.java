@@ -1,12 +1,12 @@
 package it.polimi.tetris;
 
 import it.polimi.tetris.CONTROLLER.ClientHandler;
+import it.polimi.tetris.CONTROLLER.Login_Controller;
 import it.polimi.tetris.VIEW.VirtualServer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -47,24 +47,23 @@ public class HelloApplication extends Application {
 
 
 
-        // Connette al server
-        this.virtualServer.Start();
+
 
 
         // Set view
-       /* FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/polimi/galaxytrucker/FXML/StartView.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/polimi/tetris/Login_View.fxml"));
         Parent root = fxmlLoader.load();
-        Scene scene = new Scene(root);*/
+        Scene scene = new Scene(root);
 
         // Get controller
-       /* StartController controller = fxmlLoader.getController();   // Get the controller
-        controller.initialize(stage, this.virtualServer);*/
+        Login_Controller controller = fxmlLoader.getController();   // Get the controller
+        controller.initialize(stage, this.virtualServer);
 
         // Stage settings
        /* stage.setWidth(MAXWIDTH);
         stage.setHeight(MAXHEIGHT);*/
 
-      //  stage.setResizable(false);
+        stage.setResizable(false);
         //  stage.setFullScreen(true);
         //Image icon = new Image(getClass().getResourceAsStream("/it/polimi/galaxytrucker/resource/Icon.jpg"));
        // stage.getIcons().add(icon);
@@ -72,8 +71,12 @@ public class HelloApplication extends Application {
 
 
         // Set and show scene
-       //stage.setScene(scene);
+        stage.setFullScreen(true);
+        stage.setScene(scene);
         stage.show();
+
+        // Connette al server
+        this.virtualServer.Start();
 
     }
 
