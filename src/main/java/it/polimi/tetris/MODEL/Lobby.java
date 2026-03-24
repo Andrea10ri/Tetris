@@ -15,13 +15,14 @@ public class Lobby {
     private ArrayList<Player> players;
     private DurationTime durationTime;
     private String lobbyId;        // identificativo univoco della lobby
-    private Player host;           // chi ha creato la lobby
+    private String host;           // chi ha creato la lobby
     private LobbyStatus status;    // WAITING, FULL, IN_GAME
 
-    public Lobby(int numOfPlayers, ArrayList<Player> players, DurationTime durationTime) {
+    public Lobby(int numOfPlayers, ArrayList<Player> players, DurationTime durationTime, String host) {
         this.numOfPlayers = numOfPlayers;
         this.players = players;
         this.durationTime = durationTime;
+        this.host = host;
     }
 
     public int getNumOfPlayers() {
@@ -64,11 +65,11 @@ public class Lobby {
         this.lobbyId = lobbyId;
     }
 
-    public Player getHost() {
+    public String getHost() {
         return host;
     }
 
-    public void setHost(Player host) {
+    public void setHost(String host) {
         this.host = host;
     }
 

@@ -51,7 +51,7 @@ public class HelloApplication extends Application {
 
 
         // Set view
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/polimi/tetris/Login_View.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/polimi/tetris/FXML/Login_View.fxml"));
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
 
@@ -71,7 +71,7 @@ public class HelloApplication extends Application {
 
 
         // Set and show scene
-        stage.setFullScreen(true);
+      //  stage.setFullScreen(true);
         stage.setScene(scene);
         stage.show();
 
