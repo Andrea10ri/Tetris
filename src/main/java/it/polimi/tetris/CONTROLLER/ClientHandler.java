@@ -28,6 +28,7 @@ public class ClientHandler implements Runnable {
     private Command command;    //Command received from client
     private Gson gson; //gson for json communication
 
+
     public ClientHandler(Socket clientSocket, Server server) {
         this.clientSocket = clientSocket;
         this.server = server;
@@ -40,7 +41,13 @@ public class ClientHandler implements Runnable {
 
     }
 
+    public Player getPlayer() {
+        return player;
+    }
 
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
 
     @Override
     //Running all the phases of the game, starting from the login and processing to the end of the game
@@ -119,11 +126,32 @@ public class ClientHandler implements Runnable {
                 ArrayList<Player> players = new ArrayList<>();
                 players.add(player);
                 Lobby l = new Lobby(cmd.getNumOfPlayers(), players, cmd.getDuration(), player.getNickname());
+                l.setLobbyId(server.getLobbyIndex());
+                server.setLobbyIndex(server.getLobbyIndex()+1);
                 server.AddLobby(l);
 
                 //Response
-                response = new LoginResponse("LOBBY CREATED", "Lobby created successfully",cmd.getNickname());
+                response = new LoginResponse("LOBBY CREATED", "Lobby created successfully",cmd.getNickname(), l);
                 SendResponse(response);
+
+                break;
+
+            case "Join_Lobby":
+
+               //devo cercare la lobby tra la lista delle lobby e aggiungere il player a quella lobby
+                for (Lobby lo : server.getLobbies()) {
+                    if (lo.getLobbyId() == cmd.getSelectedLobby().getLobbyId()) {
+
+                        lo.AddPlayer(player);
+                        response = new LoginResponse("LOBBY JOINED", "Joined successfully", cmd.getNickname(), lo);
+                        SendResponse(response);
+
+                        // notifica tutti gli altri
+                        LoginResponse update = new LoginResponse("LOBBY UPDATED", "New player joined", "", lo);
+                        server.SendToAll(update, lo);
+                        break;
+                    }
+                }
 
                 break;
 

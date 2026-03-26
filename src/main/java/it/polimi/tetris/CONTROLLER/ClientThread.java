@@ -123,6 +123,19 @@ public class ClientThread extends Thread {
 
 
             case "LOBBY CREATED":
+                ChangeScene("WaitingRoom_View", loginResponse, this.nickname);
+                break;
+
+            case "LOBBY JOINED":
+                //devo però ricaricare la scena anche a tutti gli altri giocatori della lobby
+                ChangeScene("WaitingRoom_View", loginResponse, this.nickname);
+                break;
+
+            case "LOBBY UPDATED":
+                Platform.runLater(() -> {
+                    WaitingRoom_Controller controller = (WaitingRoom_Controller) fxmlLoader.getController();
+                    controller.SetupRoom(loginResponse.getSelectedLobby());
+                });
                 break;
         }
     }
@@ -165,6 +178,15 @@ public class ClientThread extends Thread {
             case "SearchLobby_View":
                 SearchLobby_Controller searchLobby_Controller = fxmlLoader.getController();
                 searchLobby_Controller.initialize(stage, virtualServer, nickname);
+                break;
+
+            case "WaitingRoom_View":
+                WaitingRoom_Controller waitingRoomController = fxmlLoader.getController();
+                waitingRoomController.initialize(stage, virtualServer, nickname);
+
+                //passo la lobby selezionata per caricare
+                Lobby lobby = ((LoginResponse) response).getSelectedLobby();
+                waitingRoomController.SetupRoom(lobby);
                 break;
         }
     }

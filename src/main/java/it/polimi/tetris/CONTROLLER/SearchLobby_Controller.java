@@ -196,4 +196,20 @@ public class SearchLobby_Controller extends Controller{
 
     }
 
+
+    @FXML
+    public void OnBtnJoinClick()
+    {
+        Lobby selectedLobby = lstLobbies.getSelectionModel().getSelectedItem();
+
+
+        // Send command to server
+        LoginCommand cmd=new LoginCommand("Join_Lobby", this.nickname, selectedLobby);
+        Gson gson=new Gson();
+        String json=gson.toJson(cmd);
+        this.virtualServer.Send(json);
+
+
+    }
+
     }

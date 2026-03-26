@@ -2,11 +2,13 @@ package it.polimi.tetris.CONTROLLER.CommandsAndResponses;
 
 import it.polimi.tetris.MODEL.ENUMS.DurationTime;
 import it.polimi.tetris.MODEL.ENUMS.PlayerColor;
+import it.polimi.tetris.MODEL.Lobby;
 
 public class LoginCommand extends Command{
 
     private int numOfPlayers;
     private DurationTime duration;
+    private Lobby selectedLobby;
 
 
     // Fields
@@ -24,6 +26,15 @@ public class LoginCommand extends Command{
         this.duration = duration;
     }
 
+
+    public LoginCommand(String CommandName, String Nickname, Lobby selectedLobby) {
+        super(CommandName, Nickname);
+        this.selectedLobby = selectedLobby;
+    }
+
+
+
+
     public int getNumOfPlayers() {
         return numOfPlayers;
     }
@@ -38,5 +49,13 @@ public class LoginCommand extends Command{
 
     public void setDuration(DurationTime duration) {
         this.duration = duration;
+    }
+
+    public Lobby getSelectedLobby() {
+        return selectedLobby;
+    }
+
+    public void setSelectedLobby(Lobby selectedLobby) {
+        this.selectedLobby = selectedLobby;
     }
 }

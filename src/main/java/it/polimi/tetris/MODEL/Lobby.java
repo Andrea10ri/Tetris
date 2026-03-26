@@ -14,7 +14,7 @@ public class Lobby {
     private final int MAX_PLAYERS = 4;
     private ArrayList<Player> players;
     private DurationTime durationTime;
-    private String lobbyId;        // identificativo univoco della lobby
+    private int lobbyId;        // identificativo univoco della lobby
     private String host;           // chi ha creato la lobby
     private LobbyStatus status;    // WAITING, FULL, IN_GAME
 
@@ -57,11 +57,11 @@ public class Lobby {
         this.durationTime = durationTime;
     }
 
-    public String getLobbyId() {
+    public int getLobbyId() {
         return lobbyId;
     }
 
-    public void setLobbyId(String lobbyId) {
+    public void setLobbyId(int lobbyId) {
         this.lobbyId = lobbyId;
     }
 
@@ -86,6 +86,8 @@ public class Lobby {
     public void AddPlayer(Player player) {
         if (!IsFull())
             players.add(player);
+
+
     }
 
     public void RemovePlayer(Player player) {
