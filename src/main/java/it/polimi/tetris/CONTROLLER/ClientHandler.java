@@ -6,6 +6,7 @@ import it.polimi.tetris.CONTROLLER.CommandsAndResponses.Command;
 import it.polimi.tetris.CONTROLLER.CommandsAndResponses.LoginCommand;
 import it.polimi.tetris.CONTROLLER.CommandsAndResponses.LoginResponse;
 import it.polimi.tetris.CONTROLLER.CommandsAndResponses.Response;
+import it.polimi.tetris.MODEL.ENUMS.LobbyStatus;
 import it.polimi.tetris.MODEL.Lobby;
 import it.polimi.tetris.MODEL.Player;
 import it.polimi.tetris.Server;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 public class ClientHandler implements Runnable {
 
     private Player player;
+    private int lobbyID;
+    private Socket socket;
     private BufferedReader in;
     private PrintWriter out;
     private Socket clientSocket; //socket used by the client
@@ -127,6 +130,8 @@ public class ClientHandler implements Runnable {
                 players.add(player);
                 Lobby l = new Lobby(cmd.getNumOfPlayers(), players, cmd.getDuration(), player.getNickname());
                 l.setLobbyId(server.getLobbyIndex());
+                lobbyID = server.getLobbyIndex();
+                l.setStatus(LobbyStatus.WAITING);
                 server.setLobbyIndex(server.getLobbyIndex()+1);
                 server.AddLobby(l);
 
@@ -140,17 +145,39 @@ public class ClientHandler implements Runnable {
 
                //devo cercare la lobby tra la lista delle lobby e aggiungere il player a quella lobby
                 for (Lobby lo : server.getLobbies()) {
-                    if (lo.getLobbyId() == cmd.getSelectedLobby().getLobbyId()) {
 
+                    if (lo.getLobbyId() == cmd.getSelectedLobby().getLobbyId() ) {
+
+                        //lobby non piena
+                        if(lo.getPlayers().size() < lo.getNumOfPlayers()){
                         lo.AddPlayer(player);
                         response = new LoginResponse("LOBBY JOINED", "Joined successfully", cmd.getNickname(), lo);
                         SendResponse(response);
+                        lobbyID=lo.getLobbyId();
 
+                        //lobby riempita
+                            if(lo.getPlayers().size() == lo.getNumOfPlayers())
+                            {
+                                lo.setStatus(LobbyStatus.FULL);
+                            }
                         // notifica tutti gli altri
                         LoginResponse update = new LoginResponse("LOBBY UPDATED", "New player joined", "", lo);
                         server.SendToAll(update, lo);
+
                         break;
+                        }
+
+                        //lobby piena
+                        else
+                        {
+                            response = new LoginResponse("FULL LOBBY", "The selected lobby is full", cmd.getNickname(), lo);
+                            SendResponse(response);
+                        }
+
+
                     }
+
+
                 }
 
                 break;
@@ -160,6 +187,51 @@ public class ClientHandler implements Runnable {
                 //Response
                 response = new LoginResponse("LOBBY LIST", "Updated lobby list",cmd.getNickname(), server.getLobbies());
                 SendResponse(response);
+
+                break;
+
+
+            case "PlayerReady":
+
+                for (Lobby lo : server.getLobbies()) {
+
+                    if (lo.getLobbyId() == lobbyID) {
+
+                        //colore disponibile
+                        if(lo.getAvailableColors().contains(cmd.getSelectedColor()) )
+                        {
+                            this.player.setPlayerColor(cmd.getSelectedColor());
+
+                            // Response
+                            response=new LoginResponse("COLOR OK", "Color set correctly", this.player.getNickname(), lo,cmd.getSelectedColor());
+
+                            // Send Response
+                            SendResponse(response);
+
+                            LoginResponse update = new LoginResponse("LOBBY UPDATED", "New player joined", "", lo);
+                            server.SendToAll(update, lo);
+
+
+                            //checking if this client is it or not the last one
+                            //  if(Server.getGame().isFull())
+                            //      {
+                            //     Server.SendToAll( new LoginResponse("FINISH LOGIN","",""));
+                            //       }
+                        }
+
+                        //colore non disponibile
+                        else
+                        {
+                            // Response
+                            response=new LoginResponse("COLOR NOT OK", "Color already taken ", this.player.getNickname(), lo);
+
+                            // Send Response
+                            SendResponse(response);
+                        }
+
+
+                    }
+                }
 
                 break;
 

@@ -3,6 +3,7 @@ package it.polimi.tetris.MODEL;
 import it.polimi.tetris.MODEL.ENUMS.DurationTime;
 import it.polimi.tetris.MODEL.ENUMS.EffectType;
 import it.polimi.tetris.MODEL.ENUMS.GameStatus;
+import it.polimi.tetris.MODEL.ENUMS.PlayerColor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -225,6 +226,9 @@ public class Game {
         this.status = GameStatus.ENDED;
         UpdateRanking();
     }
+
+
+
 
 
 }

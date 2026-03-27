@@ -6,6 +6,7 @@ import it.polimi.tetris.CONTROLLER.CommandsAndResponses.Command;
 import it.polimi.tetris.CONTROLLER.CommandsAndResponses.LoginCommand;
 import it.polimi.tetris.CONTROLLER.CommandsAndResponses.LoginResponse;
 import it.polimi.tetris.CONTROLLER.CommandsAndResponses.Response;
+import it.polimi.tetris.MODEL.ENUMS.LobbyStatus;
 import it.polimi.tetris.MODEL.Lobby;
 import it.polimi.tetris.VIEW.VirtualServer;
 import javafx.application.Platform;
@@ -18,6 +19,7 @@ import javafx.stage.Stage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.List;
 
 public class ClientThread extends Thread {
 
@@ -115,9 +117,23 @@ public class ClientThread extends Thread {
                 break;
 
             case "LOBBY LIST":
+                //aggiorno la listview mettenod solo le lobby non piene
                 Platform.runLater(() -> {
                     SearchLobby_Controller controller = fxmlLoader.getController();
-                    controller.getLstLobbies().getItems().setAll(loginResponse.getLobbies());
+
+                    List<Lobby> waitingLobbies = loginResponse.getLobbies().stream()
+                            .filter(l -> l.getStatus() == LobbyStatus.WAITING)
+                            .toList();
+
+
+                    controller.getLstLobbies().getItems().setAll(waitingLobbies);
+                });
+                break;
+
+            case "FULL LOBBY":
+                Platform.runLater(() -> {
+                    SearchLobby_Controller controller = (SearchLobby_Controller) fxmlLoader.getController();
+                    controller.getLblError().setVisible(true);
                 });
                 break;
 
@@ -131,12 +147,36 @@ public class ClientThread extends Thread {
                 ChangeScene("WaitingRoom_View", loginResponse, this.nickname);
                 break;
 
+
+
+
             case "LOBBY UPDATED":
                 Platform.runLater(() -> {
                     WaitingRoom_Controller controller = (WaitingRoom_Controller) fxmlLoader.getController();
                     controller.SetupRoom(loginResponse.getSelectedLobby());
                 });
                 break;
+
+            case "COLOR OK":
+                Platform.runLater(() -> {
+                    WaitingRoom_Controller controller = (WaitingRoom_Controller) fxmlLoader.getController();
+                    controller.SetupRoom(loginResponse.getSelectedLobby());
+                    controller.updateAvailableColors(loginResponse.getSelectedLobby());
+
+                });
+                break;
+
+            case "COLOR NOT OK":
+                Platform.runLater(() -> {
+                    WaitingRoom_Controller controller = (WaitingRoom_Controller) fxmlLoader.getController();
+                    controller.getBtnReady().setDisable(false);
+                    controller.getCmbColor().setDisable(false);
+                    controller.SetupRoom(loginResponse.getSelectedLobby());
+                    controller.updateAvailableColors(loginResponse.getSelectedLobby());
+
+                });
+                break;
+
         }
     }
 
@@ -187,6 +227,8 @@ public class ClientThread extends Thread {
                 //passo la lobby selezionata per caricare
                 Lobby lobby = ((LoginResponse) response).getSelectedLobby();
                 waitingRoomController.SetupRoom(lobby);
+                waitingRoomController.updateAvailableColors(lobby);
+
                 break;
         }
     }

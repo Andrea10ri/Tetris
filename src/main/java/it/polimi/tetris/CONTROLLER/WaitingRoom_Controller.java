@@ -12,6 +12,8 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class WaitingRoom_Controller extends Controller {
 
@@ -26,7 +28,45 @@ public class WaitingRoom_Controller extends Controller {
     @Override
     public void initialize(Stage stage, VirtualServer virtualServer, String nickname) {
         super.initialize(stage, virtualServer, nickname);
-        cmbColor.getItems().addAll(PlayerColor.values());
+
+    }
+
+    public Button getBtnReady() {
+        return btnReady;
+    }
+
+    public ComboBox<PlayerColor> getCmbColor() {
+        return cmbColor;
+    }
+
+    public void updateAvailableColors(Lobby lobby) {
+
+        // Tutti i colori possibili
+        List<PlayerColor> allColors = List.of(
+                PlayerColor.LIGHTBLUE,
+                PlayerColor.RED,
+                PlayerColor.PURPLE,
+                PlayerColor.LIGHTGREEN
+        );
+
+        // Colori già scelti dai giocatori
+        List<PlayerColor> usedColors = lobby.getPlayers().stream()
+                .map(Player::getPlayerColor)
+                .filter(Objects::nonNull)
+                .toList();
+
+        // Colori ancora disponibili
+        List<PlayerColor> freeColors = allColors.stream()
+                .filter(c -> !usedColors.contains(c))
+                .toList();
+
+        // Aggiorna la ComboBox
+        cmbColor.getItems().setAll(freeColors);
+
+
+        if (!freeColors.contains(cmbColor.getValue())) {
+            cmbColor.setValue(null);
+        }
     }
 
     /**
@@ -37,6 +77,7 @@ public class WaitingRoom_Controller extends Controller {
         this.maxPlayers = lobby.getNumOfPlayers();
         playersContainer.getChildren().clear();
 
+
         // crea tutti gli slot
         for (int i = 0; i < maxPlayers; i++) {
             VBox playerPanel = CreatePlayerPanel(i + 1);
@@ -44,10 +85,10 @@ public class WaitingRoom_Controller extends Controller {
             playersContainer.getChildren().add(playerPanel);
         }
 
-        // popola subito i pannelli dei giocatori già presenti
+        //popola i pannelli dei giocatori già presenti
         ArrayList<Player> players = lobby.getPlayers();
         for (int i = 0; i < players.size(); i++) {
-            UpdatePlayerPanel(i + 1, players.get(i).getNickname(), null);
+            UpdatePlayerPanel(i + 1, players.get(i).getNickname(), players.get(i).getPlayerColor());
         }
     }
 
@@ -59,21 +100,29 @@ public class WaitingRoom_Controller extends Controller {
         panel.setStyle("-fx-border-color: gray; -fx-border-width: 1; -fx-padding: 10; -fx-alignment: CENTER;");
         panel.setMaxWidth(Double.MAX_VALUE);
 
-        Label lblSlot = new Label("Player " + slotNumber);
-        lblSlot.setId("lblSlot" + slotNumber);
-
         Label lblNick = new Label("Waiting...");
         lblNick.setId("lblNick" + slotNumber);
+        lblNick.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        Label lblColor = new Label("");
-        lblColor.setId("lblColor" + slotNumber);
-
+        // Ready
         Label lblReady = new Label("");
         lblReady.setId("lblReady" + slotNumber);
 
-        panel.getChildren().addAll(lblSlot, lblNick, lblColor, lblReady);
+        Region spacer = new Region();
+        VBox.setVgrow(spacer, Priority.ALWAYS);
+
+        Label lblSlot = new Label("Player " + slotNumber);
+        lblSlot.setId("lblSlot" + slotNumber);
+        lblSlot.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #333;");
+
+
+        panel.getChildren().addAll(lblNick,  lblReady, spacer, lblSlot);
+
+
+
         panel.setId("panel" + slotNumber);
         return panel;
+
     }
 
     /**
@@ -84,15 +133,36 @@ public class WaitingRoom_Controller extends Controller {
         VBox panel = (VBox) playersContainer.getChildren().get(slot - 1);
 
         Label lblNick = (Label) panel.lookup("#lblNick" + slot);
-        Label lblColor = (Label) panel.lookup("#lblColor" + slot);
         Label lblReady = (Label) panel.lookup("#lblReady" + slot);
 
         lblNick.setText(nickname);
-        if(color != null) {
-        lblColor.setText("Colore: " + color.toString());
-        lblColor.setStyle("-fx-text-fill: " + GetColorHex(color));
-        lblReady.setText("✓ READY");
-        lblReady.setStyle("-fx-text-fill: green;");}
+        lblNick.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #333;");
+
+        if (color != null) {
+
+            // Converti enum → colore HEX
+            String bgColor = switch (color) {
+                case LIGHTBLUE -> "#52BFF2";
+                case RED -> "#FF4136";
+                case PURPLE -> "#C64FD6";
+                case LIGHTGREEN -> "#43D154";
+            };
+
+            //colore del panel
+            panel.setStyle(
+                    "-fx-background-color: " + bgColor + ";" +
+                            "-fx-background-radius: 10;" +
+                            "-fx-border-color: gray;" +
+                            "-fx-border-width: 1;" +
+                            "-fx-padding: 10;" +
+                            "-fx-alignment: CENTER;"
+            );
+
+
+            lblReady.setText("READY");
+            lblReady.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+        }
+
     }
 
     /**
@@ -102,17 +172,17 @@ public class WaitingRoom_Controller extends Controller {
     public void onReadyClick() {
         PlayerColor selectedColor = cmbColor.getValue();
         if (selectedColor == null) {
-            lblStatus.setText("Seleziona un colore!");
+            lblStatus.setText("Select a color!");
             return;
         }
         // Disabilita bottone e combobox
         btnReady.setDisable(true);
         cmbColor.setDisable(true);
 
-        // Manda al server
-       // LoginCommand cmd = new LoginCommand("PlayerReady", this.nickname, selectedColor);
-        //Gson gson = new Gson();
-        //this.virtualServer.Send(gson.toJson(cmd));
+        //Notifica il server che il giocatore è pronto e il colore è selezionato
+        LoginCommand cmd = new LoginCommand("PlayerReady", this.nickname, selectedColor);
+        Gson gson = new Gson();
+        this.virtualServer.Send(gson.toJson(cmd));
     }
 
     /**

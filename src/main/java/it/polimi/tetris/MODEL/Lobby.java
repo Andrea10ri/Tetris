@@ -3,6 +3,7 @@ package it.polimi.tetris.MODEL;
 import it.polimi.tetris.MODEL.ENUMS.CellStatus;
 import it.polimi.tetris.MODEL.ENUMS.DurationTime;
 import it.polimi.tetris.MODEL.ENUMS.LobbyStatus;
+import it.polimi.tetris.MODEL.ENUMS.PlayerColor;
 
 import java.util.ArrayList;
 
@@ -118,5 +119,35 @@ public class Lobby {
         Game game = new Game(numOfPlayers, players, durationTime);
         game.Start();
         return game;
+    }
+
+
+
+    /**
+     * <p>Get the list of available colors to select in login phase</p>
+     * @return list of available colors if there is at least one color, null otherwise
+     */
+    public ArrayList<PlayerColor> getAvailableColors() {
+
+        // List of Player Color
+        ArrayList<PlayerColor> AvailableColors = new ArrayList<>();
+        AvailableColors.add(PlayerColor.LIGHTBLUE);
+        AvailableColors.add(PlayerColor.LIGHTGREEN);
+        AvailableColors.add(PlayerColor.RED);
+        AvailableColors.add(PlayerColor.PURPLE);
+
+        //Search color already used
+        for(Player p : players) {
+            if(AvailableColors.contains(p.getPlayerColor())) {
+                AvailableColors.remove(p.getPlayerColor());
+            }
+        }
+
+        //If available colors is empty return null
+        if(AvailableColors.isEmpty()) {
+            return null;
+        }
+
+        return  AvailableColors;
     }
 }

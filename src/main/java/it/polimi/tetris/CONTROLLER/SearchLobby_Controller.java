@@ -27,6 +27,8 @@ public class SearchLobby_Controller extends Controller{
     @FXML
     Label lblWelcome;
     @FXML
+    Label lblError;
+    @FXML
     ListView<Lobby> lstLobbies;
     @FXML
     Button btnRefresh;
@@ -69,6 +71,10 @@ public class SearchLobby_Controller extends Controller{
 
     public void setLstLobbies(ListView<Lobby> lstLobbies) {
         this.lstLobbies = lstLobbies;
+    }
+
+    public Label getLblError() {
+        return lblError;
     }
 
     @Override

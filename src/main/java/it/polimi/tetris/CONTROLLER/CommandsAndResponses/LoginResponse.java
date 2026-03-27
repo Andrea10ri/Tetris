@@ -1,5 +1,6 @@
 package it.polimi.tetris.CONTROLLER.CommandsAndResponses;
 
+import it.polimi.tetris.MODEL.ENUMS.PlayerColor;
 import it.polimi.tetris.MODEL.Lobby;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ public class LoginResponse extends Response{
 
     private ArrayList<Lobby> lobbies;
     private Lobby selectedLobby;
+    private PlayerColor selectedColor;
 
     public LoginResponse() {
         super();
@@ -29,6 +31,13 @@ public class LoginResponse extends Response{
         this.selectedLobby = selectedLobby;
     }
 
+    public LoginResponse(String message, String description, String nickname, Lobby selectedLobby, PlayerColor selectedColor) {
+        super(message, description, nickname);
+        this.selectedLobby = selectedLobby;
+        this.selectedColor = selectedColor;
+    }
+
+
     public ArrayList<Lobby> getLobbies() {
         return lobbies;
     }
@@ -43,5 +52,13 @@ public class LoginResponse extends Response{
 
     public void setSelectedLobby(Lobby selectedLobby) {
         this.selectedLobby = selectedLobby;
+    }
+
+    public PlayerColor getSelectedColor() {
+        return selectedColor;
+    }
+
+    public void setSelectedColor(PlayerColor selectedColor) {
+        this.selectedColor = selectedColor;
     }
 }

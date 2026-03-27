@@ -9,7 +9,7 @@ public class LoginCommand extends Command{
     private int numOfPlayers;
     private DurationTime duration;
     private Lobby selectedLobby;
-
+    private PlayerColor selectedColor;
 
     // Fields
     public LoginCommand( String command, String nickname ) {
@@ -32,8 +32,10 @@ public class LoginCommand extends Command{
         this.selectedLobby = selectedLobby;
     }
 
-
-
+    public LoginCommand(String CommandName, String Nickname, PlayerColor selectedColor) {
+        super(CommandName, Nickname);
+        this.selectedColor = selectedColor;
+    }
 
     public int getNumOfPlayers() {
         return numOfPlayers;
@@ -57,5 +59,13 @@ public class LoginCommand extends Command{
 
     public void setSelectedLobby(Lobby selectedLobby) {
         this.selectedLobby = selectedLobby;
+    }
+
+    public PlayerColor getSelectedColor() {
+        return selectedColor;
+    }
+
+    public void setSelectedColor(PlayerColor selectedColor) {
+        this.selectedColor = selectedColor;
     }
 }
