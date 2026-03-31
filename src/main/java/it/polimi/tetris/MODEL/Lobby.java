@@ -115,7 +115,7 @@ public class Lobby {
             player.setTetrisMatch(t);
         }
 
-        // crea il Game e lo avvia
+        //crea il Game e lo avvia
         Game game = new Game(numOfPlayers, players, durationTime);
         game.Start();
         return game;

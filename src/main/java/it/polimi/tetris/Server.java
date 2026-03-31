@@ -3,6 +3,7 @@ package it.polimi.tetris;
 import it.polimi.tetris.CONTROLLER.ClientHandler;
 import it.polimi.tetris.CONTROLLER.CommandsAndResponses.Response;
 import it.polimi.tetris.MODEL.ENUMS.LobbyStatus;
+import it.polimi.tetris.MODEL.Game;
 import it.polimi.tetris.MODEL.Lobby;
 
 import java.util.ArrayList;
@@ -13,10 +14,12 @@ public class Server {
     private ArrayList<ClientHandler> clients; //list of clienthandler, one per player
     private ArrayList<Lobby> lobbies; //list of all lobbyes started and ongoing in the server
     private int lobbyIndex; //number assigned at the lobbyId
+    private ArrayList<Game> activeGames; //list of started games
 
     public Server() {
         this.clients = new ArrayList<>();
         this.lobbies = new ArrayList<>();
+        this.activeGames = new ArrayList<>();
     }
 
     public void AddClient(ClientHandler clientHandler) {
@@ -60,9 +63,20 @@ public class Server {
     }
 
     public ArrayList<ClientHandler> getClients() { return clients; }
+
     public ArrayList<Lobby> getLobbies() { return lobbies; }
 
+    public ArrayList<Game> getActiveGames() {
+        return activeGames;
+    }
 
+    public void setActiveGames(ArrayList<Game> activeGames) {
+        this.activeGames = activeGames;
+    }
+
+    public void AddGame(Game game) {
+        activeGames.add(game);
+    }
 
     public void SendToAll(Response response, Lobby lobby) {
         for (ClientHandler ch : clients) {

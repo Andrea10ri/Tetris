@@ -6,10 +6,13 @@ import it.polimi.tetris.MODEL.ENUMS.PlayerColor;
 import it.polimi.tetris.MODEL.Lobby;
 import it.polimi.tetris.MODEL.Player;
 import it.polimi.tetris.VIEW.VirtualServer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +40,10 @@ public class WaitingRoom_Controller extends Controller {
 
     public ComboBox<PlayerColor> getCmbColor() {
         return cmbColor;
+    }
+
+    public Label getLblStatus() {
+        return lblStatus;
     }
 
     public void updateAvailableColors(Lobby lobby) {
@@ -196,5 +203,18 @@ public class WaitingRoom_Controller extends Controller {
             case LIGHTGREEN: return "#44ff88";
             default: return "white";
         }
+    }
+
+
+    public void startCountdownAndSwitchScene() {
+
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.seconds(0), e -> lblStatus.setText("--3--")),
+                new KeyFrame(Duration.seconds(1), e -> lblStatus.setText("--2--")),
+                new KeyFrame(Duration.seconds(2), e -> lblStatus.setText("--1--"))
+
+        );
+
+        timeline.play();
     }
 }

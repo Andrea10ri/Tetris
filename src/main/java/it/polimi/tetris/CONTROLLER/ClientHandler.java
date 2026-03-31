@@ -2,10 +2,7 @@ package it.polimi.tetris.CONTROLLER;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import it.polimi.tetris.CONTROLLER.CommandsAndResponses.Command;
-import it.polimi.tetris.CONTROLLER.CommandsAndResponses.LoginCommand;
-import it.polimi.tetris.CONTROLLER.CommandsAndResponses.LoginResponse;
-import it.polimi.tetris.CONTROLLER.CommandsAndResponses.Response;
+import it.polimi.tetris.CONTROLLER.CommandsAndResponses.*;
 import it.polimi.tetris.MODEL.ENUMS.LobbyStatus;
 import it.polimi.tetris.MODEL.Lobby;
 import it.polimi.tetris.MODEL.Player;
@@ -17,6 +14,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class ClientHandler implements Runnable {
 
@@ -52,22 +50,6 @@ public class ClientHandler implements Runnable {
         this.player = player;
     }
 
-    @Override
-    //Running all the phases of the game, starting from the login and processing to the end of the game
-    public void run() {
-
-
-        //connection
-        BufferInstance();
-        System.out.println("Client connected: " + clientSocket.getRemoteSocketAddress());
-
-        //phases
-        LoginLoop();
-
-
-
-
-    }
 
     private void BufferInstance() {
         try {
@@ -77,6 +59,27 @@ public class ClientHandler implements Runnable {
             e.printStackTrace();
         }
     }
+
+    @Override
+    //Running all the phases of the game, starting from the login and processing to the end of the game
+    public void run() {
+
+
+        //connection
+        BufferInstance();
+        System.out.println("Client connected: " + clientSocket.getRemoteSocketAddress());
+
+        //Login phase
+        LoginLoop();
+        //Game phase
+        GameLoop();
+
+
+
+
+
+    }
+
 
     //Loop that mamnage the messages obtained during the login phase
     private void LoginLoop() {
@@ -193,9 +196,7 @@ public class ClientHandler implements Runnable {
 
             case "PlayerReady":
 
-                for (Lobby lo : server.getLobbies()) {
-
-                    if (lo.getLobbyId() == lobbyID) {
+                         Lobby lo = getMyLobby();
 
                         //colore disponibile
                         if(lo.getAvailableColors().contains(cmd.getSelectedColor()) )
@@ -208,15 +209,16 @@ public class ClientHandler implements Runnable {
                             // Send Response
                             SendResponse(response);
 
-                            LoginResponse update = new LoginResponse("LOBBY UPDATED", "New player joined", "", lo);
-                            server.SendToAll(update, lo);
+                            response = new LoginResponse("LOBBY UPDATED", "Refreshing the view", this.player.getNickname(), lo);
+                            server.SendToAll(response, lo);
 
 
-                            //checking if this client is it or not the last one
-                            //  if(Server.getGame().isFull())
-                            //      {
-                            //     Server.SendToAll( new LoginResponse("FINISH LOGIN","",""));
-                            //       }
+                               //checking if this client is it or not the last on
+                              if((4 - lo.getAvailableColors().size()) == lo.getNumOfPlayers())
+                                  {
+                                      response = new LoginResponse("LAST PLAYER ENTERED", "Lobby is full, the game can start", this.player.getNickname(), lo);
+                                      server.SendToAll(response, lo);
+                                  }
                         }
 
                         //colore non disponibile
@@ -230,13 +232,78 @@ public class ClientHandler implements Runnable {
                         }
 
 
-                    }
+
+
+                break;
+
+            case "FinishLogin":
+
+                //waiting the countdown to finish
+                try {
+                    TimeUnit.MILLISECONDS.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
 
+                //setting the game
+                if(isHost())
+                {
+                  Lobby lob =  getMyLobby();
+                  server.AddGame(lob.StartGame());
+                }
+
+
+                response=new LoginResponse("FINISH LOGIN","", this.player.getNickname());
+
+                // Send Response
+                SendResponse(response);
                 break;
 
         }
     }
+
+    //Loop that mamnage the messages obtained during the game phase
+    private void GameLoop() {
+
+        //command received
+        command = new GameCommand();
+
+        //input string
+        String message="";
+        response=new GameResponse();
+
+        while(!clientSocket.isClosed() && !command.getCommandName().equals("FinishGame"))
+        {
+            try {
+                message = in.readLine();
+                System.out.println("Received: " + message);
+                //Create the Command from json string
+                command = gson.fromJson(message, LoginCommand.class);
+                // Processing the command
+                GameCommandProcess((GameCommand) command);
+            }
+            catch (IOException e) {
+                System.out.println("Client disconnected");
+                return;
+            }
+        }
+
+    }
+
+
+    /**
+     * Processing the game command in input
+     * @param cmd Command to process
+     */
+    public void GameCommandProcess(GameCommand cmd) {
+
+
+        switch (cmd.getCommandName()) {
+
+        }
+    }
+
+
     public void Send(String message) {
         out.println(message);
     }
@@ -250,5 +317,33 @@ public class ClientHandler implements Runnable {
         this.out.println(gson.toJson(response));
         this.out.flush();
 
+    }
+
+    public boolean isHost(){
+
+        for (Lobby lo : server.getLobbies()) {
+
+
+            if (lo.getLobbyId() == lobbyID && lo.getPlayers().getFirst().getNickname().equals(this.player.getNickname())) {
+
+                return true;
+
+            }
+
+        }
+        return false;
+    }
+
+    public Lobby getMyLobby() {
+
+        for (Lobby lo : server.getLobbies()) {
+
+
+            if (lo.getLobbyId() == lobbyID){
+                return lo;
+            }
+
+        }
+        return null;
     }
 }

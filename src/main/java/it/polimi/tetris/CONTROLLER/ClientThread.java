@@ -2,10 +2,7 @@ package it.polimi.tetris.CONTROLLER;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import it.polimi.tetris.CONTROLLER.CommandsAndResponses.Command;
-import it.polimi.tetris.CONTROLLER.CommandsAndResponses.LoginCommand;
-import it.polimi.tetris.CONTROLLER.CommandsAndResponses.LoginResponse;
-import it.polimi.tetris.CONTROLLER.CommandsAndResponses.Response;
+import it.polimi.tetris.CONTROLLER.CommandsAndResponses.*;
 import it.polimi.tetris.MODEL.ENUMS.LobbyStatus;
 import it.polimi.tetris.MODEL.Lobby;
 import it.polimi.tetris.VIEW.VirtualServer;
@@ -20,6 +17,7 @@ import javafx.stage.Stage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class ClientThread extends Thread {
 
@@ -58,6 +56,10 @@ public class ClientThread extends Thread {
         System.out.println("Client thread started");
         // Login phase
         LoginLoop();
+        //Game phase
+        GameLoop();
+
+
 
     }
 
@@ -98,15 +100,13 @@ public class ClientThread extends Thread {
 
     }
 
-
-
     /**
      * Process the response from server
      * @param loginResponse Response to process
      */
     public void LoginResponseProcess(LoginResponse loginResponse) {
 
-        // Print the message
+        //print the message
         System.out.println(loginResponse.getMessage());
 
         switch (loginResponse.getMessage()) {
@@ -148,8 +148,6 @@ public class ClientThread extends Thread {
                 break;
 
 
-
-
             case "LOBBY UPDATED":
                 Platform.runLater(() -> {
                     WaitingRoom_Controller controller = (WaitingRoom_Controller) fxmlLoader.getController();
@@ -177,9 +175,75 @@ public class ClientThread extends Thread {
                 });
                 break;
 
+            case "LAST PLAYER ENTERED":
+                Platform.runLater(() -> {
+                    WaitingRoom_Controller controller = fxmlLoader.getController();
+                    controller.startCountdownAndSwitchScene();
+
+                });
+
+                LoginCommand cmd=new LoginCommand("FinishLogin", this.nickname);
+                Gson gson=new Gson();
+                String json=gson.toJson(cmd);
+                this.virtualServer.Send(json);
+
+                break;
+
+            case "FINISH LOGIN":
+                ChangeScene("Game_View", loginResponse, this.nickname);
+                break;
+
         }
     }
 
+
+
+    public void GameLoop() {
+
+
+        response = new GameResponse();
+
+        //string from server
+        String answer = "";
+
+        command = new GameCommand();
+
+        while (!this.virtualServer.getSocket().isClosed() && !response.getMessage().equals("FINISH GAME")) {
+            try {
+                answer = in.readLine();
+
+            }
+            catch (IOException e) {
+
+                try {
+                    this.virtualServer.getSocket().close();
+                    System.out.println("Server closed");
+                    System.exit(0);
+                }
+                catch (IOException e1) {
+
+                    System.out.println("Try to close socket");
+
+                }
+            }
+
+            response = gson.fromJson(answer, GameResponse.class);
+            GameResponseProcess((GameResponse) response);
+        }
+
+
+    }
+
+    public void GameResponseProcess(GameResponse gameResponse) {
+
+
+        //print the message
+        System.out.println(gameResponse.getMessage());
+
+        switch (gameResponse.getMessage()) {
+
+        }
+    }
     /**
      * Method that change the scene
      *
@@ -188,7 +252,7 @@ public class ClientThread extends Thread {
     public void ChangeScene(String view, Response response, String nickname) {
 
         Platform.runLater(() -> {
-            // New page
+            //new page
             this.fxmlLoader = new FXMLLoader(getClass().getResource("/it/polimi/tetris/FXML/" + view + ".fxml"));
             // Load the page
             try {
@@ -196,10 +260,10 @@ public class ClientThread extends Thread {
             } catch (IOException e) {
                 System.out.println("Impossible to load ");
             }
-            // Set scene
+            //set scene
             this.scene = new Scene(this.root);
             this.stage.setScene(this.scene);
-            // Initialize the controller
+            //Initialize the controller
             Initialize(view, response, nickname);
             this.stage.show();
         });
@@ -228,6 +292,12 @@ public class ClientThread extends Thread {
                 Lobby lobby = ((LoginResponse) response).getSelectedLobby();
                 waitingRoomController.SetupRoom(lobby);
                 waitingRoomController.updateAvailableColors(lobby);
+
+                break;
+
+            case "Game_View":
+               Game_Controller gameController = fxmlLoader.getController();
+                gameController.initialize(stage, virtualServer, nickname);
 
                 break;
         }

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.geometry.*?>
+
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="it.polimi.tetris.CONTROLLER.Game_Controller"
+      prefHeight="600.0" prefWidth="900.0"
+      spacing="20" alignment="CENTER">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- SINISTRA: board principale del giocatore -->
+    <VBox spacing="10" alignment="TOP_CENTER">
+
+        <!-- Timer e fase -->
+        <HBox spacing="15" alignment="CENTER">
+            <Label fx:id="lblTimer" text="10:00" style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
+            <Label fx:id="lblPhase" text="FASE 1" style="-fx-font-size: 14px;"/>
+        </HBox>
+
+
+        <Canvas fx:id="mainBoard" width="300" height="600"/>
+
+        <!-- Score e linee -->
+        <HBox spacing="20" alignment="CENTER">
+            <VBox alignment="CENTER">
+                <Label text="SCORE" style="-fx-font-size: 10px;"/>
+                <Label fx:id="lblScore" text="0" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+            </VBox>
+            <VBox alignment="CENTER">
+                <Label text="NEXT" style="-fx-font-size: 10px;"/>
+                <Canvas fx:id="nextPiece" width="80" height="80"/>
+            </VBox>
+        </HBox>
+
+        <!--effetti attivati-->
+        <Label fx:id="lblEffects" text="" style="-fx-font-size: 11px; -fx-text-fill: orange;"/>
+
+    </VBox>
+
+    <!-- DESTRA: board avversari -->
+    <HBox fx:id="opponentsContainer" spacing="10" alignment="TOP_CENTER" HBox.hgrow="ALWAYS"/>
+
+</HBox>
