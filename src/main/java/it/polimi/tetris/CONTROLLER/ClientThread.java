@@ -10,14 +10,12 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class ClientThread extends Thread {
 
@@ -196,10 +194,7 @@ public class ClientThread extends Thread {
         }
     }
 
-
-
     public void GameLoop() {
-
 
         response = new GameResponse();
 
@@ -235,13 +230,29 @@ public class ClientThread extends Thread {
     }
 
     public void GameResponseProcess(GameResponse gameResponse) {
-
-
-        //print the message
         System.out.println(gameResponse.getMessage());
 
         switch (gameResponse.getMessage()) {
 
+            case "SET GAME":
+                Platform.runLater(() -> {
+                    Game_Controller gameController = (Game_Controller) fxmlLoader.getController();
+                    gameController.SetGame(
+                            gameResponse.getRemainingTime(),
+                            gameResponse.getPhase(),
+                            gameResponse.getEnemiesNicknames(),
+                            gameResponse.getPlayerColor()
+                    );
+                    gameController.SetupKeyboardInput();
+                });
+                break;
+
+            case "TICK_UPDATE":
+                Platform.runLater(() -> {
+                    Game_Controller gameController = (Game_Controller) fxmlLoader.getController();
+                    gameController.RenderGameState(gameResponse);
+                });
+                break;
         }
     }
     /**

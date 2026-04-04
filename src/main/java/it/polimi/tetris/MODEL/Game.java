@@ -25,6 +25,7 @@ public class Game {
     private Player [] ranking; //ranking of the match
     private int gamePhase;
     private GameStatus status; // WAITING, RUNNING, ENDED
+    private int gameID;        // identificativo univoco del game
 
 
     //constructor
@@ -99,11 +100,23 @@ public class Game {
         this.status = status;
     }
 
+    public int getRemainingTime() {
+        return remainingTime;
+    }
 
+    public int getGameID() {
+        return gameID;
+    }
+
+    public void setGameID(int gameID) {
+        this.gameID = gameID;
+    }
 
     public void Start() {
+
         // imposta i callback per ogni giocatore
         for (Player player : Players) {
+
             TetrisMatch match = player.getTetrisMatch();
 
             match.setOnRowsCleared(cleared -> OnRowsCleared(player, cleared));

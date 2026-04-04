@@ -14,7 +14,6 @@ import java.util.Random;
 public class TetrisBoard {
 
     //attributes
-
     private int Width;
     private int Height;
     private Cell [][] gridTable;
@@ -22,7 +21,6 @@ public class TetrisBoard {
 
 
     public TetrisBoard( int width, int height, Cell[][] gridTable) {
-
         Width = width;
         Height = height;
         this.gridTable = gridTable;
@@ -190,6 +188,7 @@ public class TetrisBoard {
         return clearedRows;
     }
 
+    //metodo usato per l'effetto bomb
     public void ExplodeCells(int row, int col, int radius) {
         for (int r = row - radius; r <= row + radius; r++) {
             for (int c = col - radius; c <= col + radius; c++) {
@@ -209,6 +208,7 @@ public class TetrisBoard {
         return false;
     }
 
+    //metodo che ritorna la posizione di dove potrebbe cadere il tetronimo
     public int GetGhostPieceY(Tetronimo t) {
         Tetronimo ghost = t.Copy();
 

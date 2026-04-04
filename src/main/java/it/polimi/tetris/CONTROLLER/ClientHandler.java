@@ -3,9 +3,10 @@ package it.polimi.tetris.CONTROLLER;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.polimi.tetris.CONTROLLER.CommandsAndResponses.*;
+import it.polimi.tetris.MODEL.*;
+import it.polimi.tetris.MODEL.ENUMS.GameStatus;
 import it.polimi.tetris.MODEL.ENUMS.LobbyStatus;
-import it.polimi.tetris.MODEL.Lobby;
-import it.polimi.tetris.MODEL.Player;
+import it.polimi.tetris.MODEL.ENUMS.TetronimoColor;
 import it.polimi.tetris.Server;
 
 import java.io.BufferedReader;
@@ -14,7 +15,10 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class ClientHandler implements Runnable {
 
@@ -64,7 +68,6 @@ public class ClientHandler implements Runnable {
     //Running all the phases of the game, starting from the login and processing to the end of the game
     public void run() {
 
-
         //connection
         BufferInstance();
         System.out.println("Client connected: " + clientSocket.getRemoteSocketAddress());
@@ -74,14 +77,10 @@ public class ClientHandler implements Runnable {
         //Game phase
         GameLoop();
 
-
-
-
-
     }
 
 
-    //Loop that mamnage the messages obtained during the login phase
+    //Loop that manage the messages obtained during the login phase
     private void LoginLoop() {
 
         //command received
@@ -262,33 +261,80 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    //Loop that mamnage the messages obtained during the game phase
+    //Loop that manage the messages obtained during the game phase
     private void GameLoop() {
 
-        //command received
-        command = new GameCommand();
-
-        //input string
-        String message="";
-        response=new GameResponse();
-
-        while(!clientSocket.isClosed() && !command.getCommandName().equals("FinishGame"))
-        {
-            try {
-                message = in.readLine();
-                System.out.println("Received: " + message);
-                //Create the Command from json string
-                command = gson.fromJson(message, LoginCommand.class);
-                // Processing the command
-                GameCommandProcess((GameCommand) command);
-            }
-            catch (IOException e) {
-                System.out.println("Client disconnected");
-                return;
+        //aspetta che il game esista
+        Game g = null;
+        while (g == null) {
+            g = getMyGame();
+            if (g == null) {
+                try { Thread.sleep(100); }
+                catch (InterruptedException e) { return; }
             }
         }
 
+        //info iniziali
+        response = new GameResponse("SET GAME", "", player.getNickname(),
+                g.getRemainingTime(), g.getGamePhase(),
+                getEnemiesNicks(), this.player.getPlayerColor());
+        SendResponse(response);
+
+        //timer del tick
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Game game = getMyGame();
+                if (game == null || game.getStatus() == GameStatus.ENDED) {
+                    timer.cancel();
+                    return;
+                }
+
+                if (player.getTetrisMatch().getTetrisBoard().IsGameOver()) {
+                    return;
+                }
+
+                //tick sul match del giocatore
+                player.getTetrisMatch().Tick();
+                // manda lo stato aggiornato
+                SendGameState();
+            }
+        }, 1000, 1000); // parte dopo 100ms, poi ogni 500ms
+
+        //timer del tempo
+        Timer gameTimer = new Timer();
+        gameTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Game game = getMyGame();
+                if (game == null || game.getStatus() == GameStatus.ENDED) {
+                    gameTimer.cancel();
+                    return;
+                }
+                // solo l'host gestisce il timer globale
+                if (isHost()) {
+                    game.TickTimer();
+                }
+            }
+        }, 1000, 1000);
+
+        command = new GameCommand();
+        String message = "";
+        while (!clientSocket.isClosed()) {
+            try {
+                message = in.readLine();
+                System.out.println("Received: " + message);
+                command = gson.fromJson(message, GameCommand.class);
+                GameCommandProcess((GameCommand) command);
+            } catch (IOException e) {
+                System.out.println("Client disconnected");
+                timer.cancel();
+                return;
+            }
+        }
     }
+
 
 
     /**
@@ -297,17 +343,70 @@ public class ClientHandler implements Runnable {
      */
     public void GameCommandProcess(GameCommand cmd) {
 
-
+        TetrisMatch match = player.getTetrisMatch();
         switch (cmd.getCommandName()) {
-
+            case "MOVE_LEFT" :
+                match.MoveLeft();
+                break;
+            case "MOVE_RIGHT":
+                match.MoveRight();
+                break;
+            case "ROTATE_CW":
+                match.TryRotateClockwise();
+                break;
+            case "ROTATE_CCW":
+                match.TryRotateCounterClockwise();
+                break;
+            case "SOFT_DROP":
+                match.MoveDown();
+                break;
         }
+
+        SendGameState();
     }
 
+
+    private void SendGameState() {
+        TetrisMatch match = player.getTetrisMatch();
+        GameResponse gs = new GameResponse("TICK_UPDATE", "", player.getNickname());
+
+        //imposto i valori aggiornati
+        gs.setRemainingTime(getMyGame().getRemainingTime());
+        gs.setPhase(getMyGame().getGamePhase());
+        gs.setBoard(BuildBoardArray(match.getTetrisBoard()));
+        gs.setCurrentShape(match.getCurrentTetronimo().getShape());
+        gs.setCurrentX(match.getCurrentTetronimo().getX());
+        gs.setCurrentY(match.getCurrentTetronimo().getY());
+        gs.setCurrentColor(ColorToInt(match.getCurrentTetronimo().getTetronimoColor()));
+        gs.setGhostY(match.getTetrisBoard().GetGhostPieceY(match.getCurrentTetronimo()));
+        gs.setNextShape(match.getNextTetronimo().getShape());
+        gs.setNextColor(ColorToInt(match.getNextTetronimo().getTetronimoColor()));
+        gs.setScore(match.getScore());
+        gs.setGameOver(player.getTetrisMatch().getTetrisBoard().IsGameOver());
+
+        //mando gli avversari
+        Game g = getMyGame();
+        ArrayList<GameResponse.OpponentBoard> opBoards = new ArrayList<>();
+        for (Player p : g.getPlayers()) {
+            if (!p.getNickname().equals(player.getNickname())) {
+                opBoards.add(new GameResponse.OpponentBoard(
+                        p.getNickname(),
+                        BuildBoardArray(p.getTetrisMatch().getTetrisBoard()),
+                        p.getTetrisMatch().getScore()
+                ));
+            }
+        }
+        gs.setOpponentBoards(opBoards);
+
+
+
+
+        SendResponse(gs);
+    }
 
     public void Send(String message) {
         out.println(message);
     }
-
     /**
      * Send the response to client
      * @param response Response to send to client
@@ -338,12 +437,57 @@ public class ClientHandler implements Runnable {
 
         for (Lobby lo : server.getLobbies()) {
 
-
             if (lo.getLobbyId() == lobbyID){
                 return lo;
             }
 
         }
         return null;
+    }
+
+    public Game getMyGame() {
+
+        for (Game ga : server.getActiveGames()) {
+
+            if (ga.getGameID() == lobbyID){ //posso usare lo stesso lobbyID perchè han valori uguali
+                return ga;
+            }
+
+        }
+        return null;
+    }
+
+    public ArrayList<String> getEnemiesNicks(){
+
+        Game g= getMyGame();
+
+        return  g.getPlayers().stream()
+                .filter(p -> !p.getNickname().equals(player.getNickname()))
+                .map(Player::getNickname)
+                .collect(Collectors.toCollection(ArrayList::new));
+
+
+    }
+    private int[][] BuildBoardArray(TetrisBoard board) {
+        int[][] result = new int[20][10];
+        for (int r = 0; r < 20; r++)
+            for (int c = 0; c < 10; c++) {
+                Cell cell = board.getGridTable()[r][c];
+                result[r][c] = cell.IsEmpty() ? 0 : ColorToInt(cell.getCellColor());
+            }
+        return result;
+    }
+
+    private int ColorToInt(TetronimoColor color) {
+        return switch (color) {
+            case CYAN -> 1;
+            case YELLOW -> 2;
+            case ORANGE -> 3;
+            case BLUE -> 4;
+            case GREEN -> 5;
+            case RED -> 6;
+            case PURPLE -> 7;
+            case GREY -> 8;
+        };
     }
 }

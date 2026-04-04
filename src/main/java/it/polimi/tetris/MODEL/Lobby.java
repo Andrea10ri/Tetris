@@ -103,6 +103,7 @@ public class Lobby {
         status = LobbyStatus.IN_GAME;
 
         for (Player player : players) {
+
             //inizializza la griglia con celle vuote
             Cell[][] grid = new Cell[20][10];
             for (int r = 0; r < 20; r++)
@@ -115,8 +116,10 @@ public class Lobby {
             player.setTetrisMatch(t);
         }
 
+
         //crea il Game e lo avvia
         Game game = new Game(numOfPlayers, players, durationTime);
+        game.setGameID(this.lobbyId);
         game.Start();
         return game;
     }
@@ -144,8 +147,8 @@ public class Lobby {
         }
 
         //If available colors is empty return null
-        if(AvailableColors.isEmpty()) {
-            return null;
+        if (AvailableColors.isEmpty()) {
+            return new ArrayList<>();
         }
 
         return  AvailableColors;

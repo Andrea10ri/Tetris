@@ -48,7 +48,7 @@ public class WaitingRoom_Controller extends Controller {
 
     public void updateAvailableColors(Lobby lobby) {
 
-        // Tutti i colori possibili
+        //tutti i colori possibili
         List<PlayerColor> allColors = List.of(
                 PlayerColor.LIGHTBLUE,
                 PlayerColor.RED,
@@ -56,13 +56,13 @@ public class WaitingRoom_Controller extends Controller {
                 PlayerColor.LIGHTGREEN
         );
 
-        // Colori già scelti dai giocatori
+        //colori non disponibili
         List<PlayerColor> usedColors = lobby.getPlayers().stream()
                 .map(Player::getPlayerColor)
                 .filter(Objects::nonNull)
                 .toList();
 
-        // Colori ancora disponibili
+        //colori ancora disponibili
         List<PlayerColor> freeColors = allColors.stream()
                 .filter(c -> !usedColors.contains(c))
                 .toList();

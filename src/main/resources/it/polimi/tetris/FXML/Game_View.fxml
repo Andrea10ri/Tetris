@@ -1,50 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.canvas.*?>
 <?import javafx.geometry.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<HBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="it.polimi.tetris.CONTROLLER.Game_Controller"
-      prefHeight="600.0" prefWidth="900.0"
-      spacing="20" alignment="CENTER">
+<HBox alignment="CENTER" prefHeight="600.0" prefWidth="900.0" spacing="20" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.tetris.CONTROLLER.Game_Controller">
 
     <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
+        <Insets bottom="20" left="20" right="20" top="20" />
     </padding>
 
     <!-- SINISTRA: board principale del giocatore -->
-    <VBox spacing="10" alignment="TOP_CENTER">
+    <VBox alignment="TOP_CENTER" spacing="10">
 
         <!-- Timer e fase -->
-        <HBox spacing="15" alignment="CENTER">
-            <Label fx:id="lblTimer" text="10:00" style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
-            <Label fx:id="lblPhase" text="FASE 1" style="-fx-font-size: 14px;"/>
+        <HBox alignment="CENTER" spacing="15">
+            <Label fx:id="lblTimer" style="-fx-font-size: 22px; -fx-font-weight: bold;" text="tmr" />
+            <Label fx:id="lblPhase" style="-fx-font-size: 14px;" text="phase" />
         </HBox>
 
 
-        <Canvas fx:id="mainBoard" width="300" height="600"/>
+        <Canvas fx:id="mainBoard" height="600" width="300" />
 
         <!-- Score e linee -->
-        <HBox spacing="20" alignment="CENTER">
+        <HBox alignment="CENTER" spacing="20">
             <VBox alignment="CENTER">
-                <Label text="SCORE" style="-fx-font-size: 10px;"/>
-                <Label fx:id="lblScore" text="0" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+                <Label style="-fx-font-size: 10px;" text="SCORE" />
+                <Label fx:id="lblScore" style="-fx-font-size: 20px; -fx-font-weight: bold;" text="0" />
             </VBox>
             <VBox alignment="CENTER">
-                <Label text="NEXT" style="-fx-font-size: 10px;"/>
-                <Canvas fx:id="nextPiece" width="80" height="80"/>
+                <Label style="-fx-font-size: 10px;" text="NEXT" />
+                <Canvas fx:id="nextPiece" height="80" width="80" />
             </VBox>
         </HBox>
 
         <!--effetti attivati-->
-        <Label fx:id="lblEffects" text="" style="-fx-font-size: 11px; -fx-text-fill: orange;"/>
+        <Label fx:id="lblEffects" style="-fx-font-size: 11px; -fx-text-fill: orange;" text="" />
 
     </VBox>
 
     <!-- DESTRA: board avversari -->
-    <HBox fx:id="opponentsContainer" spacing="10" alignment="TOP_CENTER" HBox.hgrow="ALWAYS"/>
+    <HBox fx:id="opponentsContainer" alignment="TOP_CENTER" fillHeight="false" prefHeight="773.0" prefWidth="488.0" spacing="10" HBox.hgrow="ALWAYS" />
 
 </HBox>

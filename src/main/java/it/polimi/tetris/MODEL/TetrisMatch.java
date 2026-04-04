@@ -18,16 +18,16 @@ import java.util.function.Consumer;
 
 public class TetrisMatch {
 
-    private TetrisBoard tetrisBoard;
-    private Tetronimo currentTetronimo;
-    private Tetronimo nextTetronimo;
-    private int fallingVelocity;
-    private int score;
-    private ArrayList<Effect> activeEffects;
+    private TetrisBoard tetrisBoard; //the board containing the tetris status
+    private Tetronimo currentTetronimo; //current descending tetronimo
+    private Tetronimo nextTetronimo; //next tetronimo to spawn
+    private int fallingVelocity; //multiplier used for managing the down speed
+    private int score; //score of the player
+    private ArrayList<Effect> activeEffects; //active effects at the moment
 
-    private Consumer<Integer> onRowsCleared;      // avvisa Game di quante righe sono state cancellate
-    private Consumer<Effect> onEffectTriggered;    // avvisa Game di quale effetto è stato triggerato
-    private Consumer<TetrisMatch> onGameOver;      // avvisa Game che questo giocatore è in game over
+    private Consumer<Integer> onRowsCleared;      //avvisa Game di quante righe sono state cancellate
+    private Consumer<Effect> onEffectTriggered;    //avvisa Game di quale effetto è stato triggerato
+    private Consumer<TetrisMatch> onGameOver;      //avvisa Game che questo giocatore è in game over
 
     public TetrisMatch(TetrisBoard tetrisBoard, Tetronimo currentTetronimo, Tetronimo nextTetronimo, int fallingVelocity, int score, ArrayList<Effect> activeEffects) {
         this.tetrisBoard = tetrisBoard;
@@ -274,15 +274,36 @@ public class TetrisMatch {
         // genera il prossimo
         GenerateNextTetronimo();
     }
-
+ //CON WAL KICK
     public void TryRotateClockwise() {
         Tetronimo rotated = currentTetronimo.Copy();
         rotated.RotateClockwise();
-        if (tetrisBoard.IsValidPosition(rotated))
-            currentTetronimo = rotated;
 
-        else
-            System.out.println("ClockWise rotation fail");
+        // prova nella posizione attuale
+        if (tetrisBoard.IsValidPosition(rotated)) {
+            currentTetronimo = rotated;
+            return;
+        }
+
+        // prova a spostarti di 1 a sinistra
+        rotated.setX(rotated.getX() - 1);
+        if (tetrisBoard.IsValidPosition(rotated)) {
+            currentTetronimo = rotated;
+            return;
+        }
+
+        // prova a spostarti di 1 a destra
+        rotated.setX(rotated.getX() + 2);
+        if (tetrisBoard.IsValidPosition(rotated)) {
+            currentTetronimo = rotated;
+            return;
+        }
+
+        // prova a spostarti di 2 a sinistra (per il tetromino I)
+        rotated.setX(rotated.getX() - 3);
+        if (tetrisBoard.IsValidPosition(rotated)) {
+            currentTetronimo = rotated;
+        }
     }
 
     public void TryRotateCounterClockwise() {
