@@ -112,7 +112,7 @@ public class Lobby {
 
             // crea la board e il match per il giocatore
             TetrisBoard tb = new TetrisBoard(10, 20, grid);
-            TetrisMatch t = new TetrisMatch(tb, 1, 0);
+            TetrisMatch t = new TetrisMatch(tb, 4, 0);
             player.setTetrisMatch(t);
         }
 

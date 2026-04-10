@@ -199,7 +199,7 @@ public class Game {
 
         remainingTime--;
 
-        // controlla se il tempo è scaduto
+        //controlla se il tempo è scaduto
         if (remainingTime <= 0) {
             EndGame();
             return;

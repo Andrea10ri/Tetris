@@ -34,6 +34,15 @@ public class BonusSlowTimeFall extends Effect {
 
     @Override
     public void Apply(TetrisMatch source, List<TetrisMatch> targets) {
+
+        //se esiste un bonus già attivato dello stesso tipo lo sostituisco
+        if (source.HasActiveEffect(BonusSlowTimeFall.class)) {
+            source.getActiveEffects().removeIf(e -> e instanceof BonusSlowTimeFall);
+            source.setFallingVelocity(source.getFallingVelocity() / 2);
+        }
+
+
+
         source.setFallingVelocity(source.getFallingVelocity() * 2);
         source.AddEffect(this);
     }

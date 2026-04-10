@@ -7,6 +7,7 @@ import it.polimi.tetris.MODEL.*;
 import it.polimi.tetris.MODEL.ENUMS.GameStatus;
 import it.polimi.tetris.MODEL.ENUMS.LobbyStatus;
 import it.polimi.tetris.MODEL.ENUMS.TetronimoColor;
+import it.polimi.tetris.MODEL.Effects.*;
 import it.polimi.tetris.Server;
 
 import java.io.BufferedReader;
@@ -296,11 +297,11 @@ public class ClientHandler implements Runnable {
                 }
 
                 //tick sul match del giocatore
-                player.getTetrisMatch().Tick();
+                player.getTetrisMatch().Tick(false);
                 // manda lo stato aggiornato
                 SendGameState();
             }
-        }, 1000, 1000); // parte dopo 100ms, poi ogni 500ms
+        }, 250, 250);
 
         //timer del tempo
         Timer gameTimer = new Timer();
@@ -360,6 +361,17 @@ public class ClientHandler implements Runnable {
             case "SOFT_DROP":
                 match.MoveDown();
                 break;
+
+            case "HARD_DROP" :
+               //posso usar direttamente il ghost piece
+                int ghostY = match.getTetrisBoard().GetGhostPieceY(match.getCurrentTetronimo());
+                match.getCurrentTetronimo().setY(ghostY);
+
+                match.Tick(true);
+                break;
+
+
+
         }
 
         SendGameState();
@@ -384,6 +396,37 @@ public class ClientHandler implements Runnable {
         gs.setScore(match.getScore());
         gs.setGameOver(player.getTetrisMatch().getTetrisBoard().IsGameOver());
 
+         // effetto del tetromino corrente
+        gs.setCurrentHasEffect(match.getCurrentTetronimo().getHasEffect());
+        if (match.getCurrentTetronimo().getHasEffect() && match.getCurrentTetronimo().getEffect() != null) {
+            gs.setEffectCellRow(match.getCurrentTetronimo().getyEffect());
+            gs.setEffectCellCol(match.getCurrentTetronimo().getxEffect());
+            gs.setCurrentEffectName(match.getCurrentTetronimo().getEffect().getClass().getSimpleName());
+        }
+
+        // celle con effetto sulla board
+        ArrayList<int[]> effectCells = new ArrayList<>();
+        Cell[][] grid = match.getTetrisBoard().getGridTable();
+        for (int r = 0; r < 20; r++)
+            for (int c = 0; c < 10; c++)
+                if (!grid[r][c].IsEmpty() && grid[r][c].getEffect() != null)
+                    effectCells.add(new int[]{r, c, ColorToEffectInt(grid[r][c].getEffect())});
+        gs.setEffectCells(effectCells);
+
+
+        ArrayList<GameResponse.ActiveEffectInfo> effectInfos = new ArrayList<>();
+        for (Effect e : match.getActiveEffects()) {
+            if (e instanceof BonusDoublePoints bdp)
+                effectInfos.add(new GameResponse.ActiveEffectInfo("BonusDoublePoints", bdp.getDurationTime(), 60));
+            else if (e instanceof BonusSlowTimeFall bsf)
+                effectInfos.add(new GameResponse.ActiveEffectInfo("BonusSlowTimeFall", bsf.getDurationTime(), 20));
+            else if (e instanceof MalusKalamako mk)
+                effectInfos.add(new GameResponse.ActiveEffectInfo("MalusKalamako", mk.getDurationTime(), 20));
+            else if (e instanceof MalusReversedControls mrc)
+                effectInfos.add(new GameResponse.ActiveEffectInfo("MalusReversedControls", mrc.getDurationTime(), 20));
+        }
+        gs.setActiveEffectInfos(effectInfos);
+
         //mando gli avversari
         Game g = getMyGame();
         ArrayList<GameResponse.OpponentBoard> opBoards = new ArrayList<>();
@@ -397,9 +440,6 @@ public class ClientHandler implements Runnable {
             }
         }
         gs.setOpponentBoards(opBoards);
-
-
-
 
         SendResponse(gs);
     }
@@ -489,5 +529,19 @@ public class ClientHandler implements Runnable {
             case PURPLE -> 7;
             case GREY -> 8;
         };
+    }
+
+    private int ColorToEffectInt(Effect effect) {
+        if (effect instanceof BonusDoublePoints) return 1;
+        if (effect instanceof BonusRemoveARow) return 2;
+        if (effect instanceof BonusBomb) return 3;
+        if (effect instanceof BonusSlowTimeFall) return 4;
+        if (effect instanceof MalusAdd1Row) return 5;
+        if (effect instanceof MalusAdd2Rows) return 6;
+        if (effect instanceof MalusHalvePoints) return 7;
+        if (effect instanceof MalusKalamako) return 8;
+        if (effect instanceof MalusReversedControls) return 9;
+        if (effect instanceof MalusDoubleTetronimo) return 10;
+        return 0;
     }
 }

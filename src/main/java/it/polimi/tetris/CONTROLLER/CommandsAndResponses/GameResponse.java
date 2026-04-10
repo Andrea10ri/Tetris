@@ -24,6 +24,26 @@ public class GameResponse extends Response {
     private boolean gameOver;
 
 
+    private boolean currentHasEffect;
+    private int effectCellRow;
+    private int effectCellCol;
+    private String currentEffectName;
+    private ArrayList<int[]> effectCells; // ogni int[] = {row, col, effectCode}
+
+
+
+    public boolean isCurrentHasEffect() { return currentHasEffect; }
+    public void setCurrentHasEffect(boolean currentHasEffect) { this.currentHasEffect = currentHasEffect; }
+    public int getEffectCellRow() { return effectCellRow; }
+    public void setEffectCellRow(int effectCellRow) { this.effectCellRow = effectCellRow; }
+    public int getEffectCellCol() { return effectCellCol; }
+    public void setEffectCellCol(int effectCellCol) { this.effectCellCol = effectCellCol; }
+    public String getCurrentEffectName() { return currentEffectName; }
+    public void setCurrentEffectName(String currentEffectName) { this.currentEffectName = currentEffectName; }
+    public void setEffectCells(ArrayList<int[]> effectCells) { this.effectCells = effectCells; }
+    public ArrayList<int[]> getEffectCells() { return effectCells; }
+
+
 
     public GameResponse() {}
 
@@ -169,7 +189,26 @@ public class GameResponse extends Response {
 
     public ArrayList<OpponentBoard> getOpponentBoards() { return opponentBoards; }
 
-    public void setOpponentBoards(ArrayList<OpponentBoard> opponentBoards) { this.opponentBoards = opponentBoards;
+    public void setOpponentBoards(ArrayList<OpponentBoard> opponentBoards) { this.opponentBoards = opponentBoards;}
+
+    public static class ActiveEffectInfo {
+        private String effectName;
+        private int remainingTicks;
+        private int totalTicks;
+
+        public ActiveEffectInfo(String effectName, int remainingTicks, int totalTicks) {
+            this.effectName = effectName;
+            this.remainingTicks = remainingTicks;
+            this.totalTicks = totalTicks;
+        }
+
+        public String getEffectName() { return effectName; }
+        public int getRemainingTicks() { return remainingTicks; }
+        public int getTotalTicks() { return totalTicks; }
     }
+
+    private ArrayList<ActiveEffectInfo> activeEffectInfos;
+    public ArrayList<ActiveEffectInfo> getActiveEffectInfos() { return activeEffectInfos; }
+    public void setActiveEffectInfos(ArrayList<ActiveEffectInfo> activeEffectInfos) { this.activeEffectInfos = activeEffectInfos; }
 
 }

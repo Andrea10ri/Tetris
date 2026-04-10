@@ -35,6 +35,13 @@ public class BonusDoublePoints extends Effect {
 
     @Override
     public void Apply(TetrisMatch source, List<TetrisMatch> targets) {
+
+        //se esiste un bonus già attivato dello stesso tipo lo sostituisco
+        if (source.HasActiveEffect(BonusDoublePoints.class)) {
+            source.getActiveEffects().removeIf(e -> e instanceof BonusDoublePoints);
+        }
+
         source.AddEffect(this);
     }
+
 }

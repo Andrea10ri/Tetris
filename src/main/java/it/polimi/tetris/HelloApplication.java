@@ -46,10 +46,6 @@ public class HelloApplication extends Application {
         stage.setTitle("Tetris");
 
 
-
-
-
-
         // Set view
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/polimi/tetris/FXML/Login_View.fxml"));
         Parent root = fxmlLoader.load();
@@ -64,7 +60,7 @@ public class HelloApplication extends Application {
         stage.setHeight(MAXHEIGHT);*/
 
         stage.setResizable(false);
-        //  stage.setFullScreen(true);
+
         //Image icon = new Image(getClass().getResourceAsStream("/it/polimi/galaxytrucker/resource/Icon.jpg"));
        // stage.getIcons().add(icon);
 

@@ -24,7 +24,7 @@ public class TetrisMatch {
     private int fallingVelocity; //multiplier used for managing the down speed
     private int score; //score of the player
     private ArrayList<Effect> activeEffects; //active effects at the moment
-
+    private int tickCounter = 0;
     private Consumer<Integer> onRowsCleared;      //avvisa Game di quante righe sono state cancellate
     private Consumer<Effect> onEffectTriggered;    //avvisa Game di quale effetto è stato triggerato
     private Consumer<TetrisMatch> onGameOver;      //avvisa Game che questo giocatore è in game over
@@ -110,7 +110,10 @@ public class TetrisMatch {
 
         Random random = new Random();
         int n = random.nextInt(7); //generating the tetronimo type
-        int m = random.nextInt(5); //generating if the tetronimo has an effect
+        int m = random.nextInt(2); //generating if the tetronimo has an effect
+
+        System.out.println("------------------");
+        System.out.println(m);
         int[][] shape;
 
         switch (n) {
@@ -123,7 +126,7 @@ public class TetrisMatch {
                 //with effect
                 if (m == 1) {
                     Effect effect = GenerateRandomEffect();
-                    this.nextTetronimo = new Tetronimo(TetronimoType.I, shape, TetronimoColor.CYAN, true, 0,1, effect);
+                    this.nextTetronimo = new Tetronimo(TetronimoType.I, shape, TetronimoColor.CYAN, true, 1, 0, effect);
                 }
 
                 //without effect
@@ -141,7 +144,7 @@ public class TetrisMatch {
                 //with effect
                 if (m == 1) {
                     Effect effect = GenerateRandomEffect();
-                    this.nextTetronimo = new Tetronimo(TetronimoType.O, shape, TetronimoColor.YELLOW, true, 0,1, effect);
+                    this.nextTetronimo = new Tetronimo(TetronimoType.O, shape, TetronimoColor.YELLOW, true, 1, 0, effect);
                 }
 
                 //without effect
@@ -159,7 +162,7 @@ public class TetrisMatch {
                 //with effect
                 if (m == 1) {
                     Effect effect = GenerateRandomEffect();
-                    this.nextTetronimo = new Tetronimo(TetronimoType.L, shape, TetronimoColor.ORANGE, true, 1,2, effect);
+                    this.nextTetronimo = new Tetronimo(TetronimoType.L, shape, TetronimoColor.ORANGE, true, 2, 1, effect);
                 }
 
                 //without effect
@@ -177,7 +180,7 @@ public class TetrisMatch {
                 //with effect
                 if (m == 1) {
                     Effect effect = GenerateRandomEffect();
-                    this.nextTetronimo = new Tetronimo(TetronimoType.J, shape, TetronimoColor.BLUE, true,1,0, effect);
+                    this.nextTetronimo = new Tetronimo(TetronimoType.J, shape, TetronimoColor.BLUE, true, 0, 1, effect);
                 }
 
                 //without effect
@@ -195,7 +198,7 @@ public class TetrisMatch {
                 //with effect
                 if (m == 1) {
                     Effect effect = GenerateRandomEffect();
-                    this.nextTetronimo = new Tetronimo(TetronimoType.S, shape, TetronimoColor.GREEN, true, 0,1, effect);
+                    this.nextTetronimo = new Tetronimo(TetronimoType.S, shape, TetronimoColor.GREEN, true, 1, 0, effect);
                 }
 
                 //without effect
@@ -213,7 +216,7 @@ public class TetrisMatch {
                 //with effect
                 if (m == 1) {
                     Effect effect = GenerateRandomEffect();
-                    this.nextTetronimo = new Tetronimo(TetronimoType.Z, shape, TetronimoColor.RED, true, 0,1,effect);
+                    this.nextTetronimo = new Tetronimo(TetronimoType.Z, shape, TetronimoColor.RED, true, 0, 0, effect);
                 }
 
                 //without effect
@@ -231,7 +234,7 @@ public class TetrisMatch {
                 //with effect
                 if (m == 1) {
                     Effect effect = GenerateRandomEffect();
-                    this.nextTetronimo = new Tetronimo(TetronimoType.T, shape, TetronimoColor.PURPLE, true,1,1,effect);
+                    this.nextTetronimo = new Tetronimo(TetronimoType.T, shape, TetronimoColor.PURPLE, true, 1, 1, effect);
                 }
 
                 //without effect
@@ -245,22 +248,25 @@ public class TetrisMatch {
 
 
     private Effect GenerateRandomEffect() {
-        Random random = new Random();
-        int n = random.nextInt(10); // 10 effetti totali (per ora)
+//        Random random = new Random();
+//        int n = random.nextInt(10); // 10 effetti totali (per ora)
+//
+//        switch (n) {
+//            case 0: return new BonusRemoveARow("bonusRemoveARow.png");
+//            case 1: return new BonusSlowTimeFall("bonusSlowTimeFall.png", 300);
+//            case 2: return new BonusDoublePoints("bonusDoublePoints.png", 300);
+//            case 3: return new BonusBomb("bonusBomb.png");
+//            case 4: return new MalusAdd1Row("malusAdd1Row.png");
+//            case 5: return new MalusAdd2Rows("malusAdd2Rows.png");
+//            case 6: return new MalusHalvePoints("malusHalvePoints.png");
+//            case 7: return new MalusDoubleTetronimo("malusDoubleTetronimo.png");
+//            case 8: return new MalusKalamako("malusKalamako.png", 600);
+//            case 9: return new MalusReversedControls("malusReversedControls.png", 600);
+//            default: return null;
+//        }
 
-        switch (n) {
-            case 0: return new BonusRemoveARow("bonusRemoveARow.png");
-            case 1: return new BonusSlowTimeFall("bonusSlowTimeFall.png", 300);
-            case 2: return new BonusDoublePoints("bonusDoublePoints.png", 300);
-            case 3: return new BonusBomb("bonusBomb.png");
-            case 4: return new MalusAdd1Row("malusAdd1Row.png");
-            case 5: return new MalusAdd2Rows("malusAdd2Rows.png");
-            case 6: return new MalusHalvePoints("malusHalvePoints.png");
-            case 7: return new MalusDoubleTetronimo("malusDoubleTetronimo.png");
-            case 8: return new MalusKalamako("malusKalamako.png", 600);
-            case 9: return new MalusReversedControls("malusReversedControls.png", 600);
-            default: return null;
-        }
+        Effect effect = new BonusSlowTimeFall("bonusSlowTimeFall.png", 20);
+        return effect;
     }
 
     public void SpawnNextTetronimo() {
@@ -381,75 +387,67 @@ public class TetrisMatch {
         activeEffects.add(effect);
     }
 
+    public void RemoveEffect(Effect effect) {
+        activeEffects.remove(effect);
+    }
+
     public void TickEffects() {
         activeEffects.removeIf(e -> {
-            e.Tick();
+
+            // decrementa ogni secondo reale
+            if (tickCounter % 2 == 0)
+                e.Tick();
+
+            if (e instanceof BonusDoublePoints) return ((BonusDoublePoints) e).IsExpired();
             if (e instanceof BonusSlowTimeFall && ((BonusSlowTimeFall) e).IsExpired()) {
-                this.setFallingVelocity(this.getFallingVelocity() / 2); // ripristina velocità
+                this.setFallingVelocity(this.getFallingVelocity() / 2);
                 return true;
             }
-            if (e instanceof BonusDoublePoints) return ((BonusDoublePoints) e).IsExpired();
             if (e instanceof MalusKalamako) return ((MalusKalamako) e).IsExpired();
             if (e instanceof MalusReversedControls) return ((MalusReversedControls) e).IsExpired();
             return false;
         });
     }
 
+
     //metodo che gestisce il ciclo di ogni tick, gestisce la caduta, se va bloccato, la pulizia di linee e relativi effetti
-    public synchronized void Tick() {
 
-        //Scala la durata degli effetti temporanei attivi e rimuove quelli scaduti
-        TickEffects();
+    public synchronized void Tick(boolean isACommand) {
 
-        //Crea una copia del tetromino corrente spostata di 1 verso il basso
+
+      if(!isACommand){  TickEffects();}
+        tickCounter++;
+
+        // scende solo ogni fallingVelocity tick
+        if (tickCounter % fallingVelocity != 0) return;
+
         Tetronimo moved = currentTetronimo.Copy();
         moved.setY(moved.getY() + 1);
 
-        //Controlla se il tetromino può scendere
         if (tetrisBoard.IsValidPosition(moved)) {
-            //Può scendere, quindi aggiorna la posizione
             currentTetronimo = moved;
-        }
-
-        else {
-
-            //Non può scendere quindi il tetromino è atterrato
-
-            //Piazza il tetromino sulla board
+        } else {
             tetrisBoard.PlaceTetronimo(currentTetronimo);
-
-            //Se era attivo un MalusDoubleTetronimo, ora che il pezzo è atterrato lo rimuove
             activeEffects.removeIf(e -> e instanceof MalusDoubleTetronimo);
 
-            //Controlla e cancella le righe piene, ottiene quante ne ha cancellate
             int cleared = tetrisBoard.ClearFullRows();
-
-            //Se ha cancellato almeno una riga aggiorna il punteggio
             if (cleared > 0) {
-
-                // Se BonusDoublePoints è attivo i punti sono doppi
                 if (HasActiveEffect(BonusDoublePoints.class))
                     AddScore(cleared * 2);
                 else
                     AddScore(cleared);
 
-                //Avvisa Game di quante righe sono state cancellate
                 onRowsCleared.accept(cleared);
 
-                //Recupera gli effetti triggerati durante il clear e notifica Game
                 List<Effect> triggered = tetrisBoard.GetTriggeredEffects();
-                for (Effect e : triggered) {
+                for (Effect e : triggered)
                     onEffectTriggered.accept(e);
-                }
             }
 
-            // Spawna il prossimo tetromino
             SpawnNextTetronimo();
 
-            //Se il nuovo tetromino spawna in posizione occupata allora è game over
-            if (tetrisBoard.IsGameOver()) {
+            if (tetrisBoard.IsGameOver())
                 onGameOver.accept(this);
-            }
         }
     }
 

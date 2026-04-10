@@ -35,7 +35,9 @@
             </VBox>
         </HBox>
 
+
         <!--effetti attivati-->
+        <HBox fx:id="activeEffectsContainer" spacing="8" alignment="CENTER"/>
         <Label fx:id="lblEffects" style="-fx-font-size: 11px; -fx-text-fill: orange;" text="" />
 
     </VBox>

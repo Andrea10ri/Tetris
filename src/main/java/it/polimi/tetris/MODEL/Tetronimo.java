@@ -137,6 +137,16 @@ public class Tetronimo {
                 rotated[c][rows - 1 - r] = shape[r][c];
 
         this.shape = rotated;
+
+        if (hasEffect) {
+            int oldRow = yEffect;
+            int oldCol = xEffect;
+            // nuova posizione: [c][rows-1-r] → nuovo row = oldCol, nuovo col = rows-1-oldRow
+            int newRow = oldCol;
+            int newCol = rows - 1 - oldRow;
+            yEffect = newRow;
+            xEffect = newCol;
+        }
     }
 
     //ruota la shape 90° in senso antiorario
@@ -150,6 +160,16 @@ public class Tetronimo {
                 rotated[cols - 1 - c][r] = shape[r][c];
 
         this.shape = rotated;
+
+        if (hasEffect) {
+            int oldRow = yEffect;
+            int oldCol = xEffect;
+            // nuova posizione: [cols-1-c][r] → nuovo row = cols-1-oldCol, nuovo col = oldRow
+            int newRow = cols - 1 - oldCol;
+            int newCol = oldRow;
+            yEffect = newRow;
+            xEffect = newCol;
+        }
     }
 
     //metodo che serve per poter avere una copia del tetronimo su cui fare collision detection
@@ -158,6 +178,9 @@ public class Tetronimo {
         for (int r = 0; r < shape.length; r++)
             shapeCopy[r] = shape[r].clone();
 
-        return new Tetronimo(type, x, y, shapeCopy, tetronimoColor, hasEffect, effect);
+        Tetronimo copy = new Tetronimo(type, x, y, shapeCopy, tetronimoColor, hasEffect, effect);
+        copy.xEffect = this.xEffect;
+        copy.yEffect = this.yEffect;
+        return copy;
     }
 }
