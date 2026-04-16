@@ -5,6 +5,7 @@ import it.polimi.tetris.MODEL.Effect;
 import it.polimi.tetris.MODEL.TetrisMatch;
 
 import java.util.List;
+import java.util.Random;
 
 public class MalusAdd1Row extends Effect {
 
@@ -16,7 +17,12 @@ public class MalusAdd1Row extends Effect {
 
     @Override
     public void Apply(TetrisMatch source, List<TetrisMatch> targets) {
-        for (TetrisMatch target : targets)
-            target.getTetrisBoard().AddGarbageRow();
+        if (targets == null || targets.isEmpty()) return;
+
+        Random random = new Random();
+        int n = random.nextInt(targets.size()); // senza +1
+
+        TetrisMatch target = targets.get(n);
+        target.getTetrisBoard().AddGarbageRow();
     }
 }

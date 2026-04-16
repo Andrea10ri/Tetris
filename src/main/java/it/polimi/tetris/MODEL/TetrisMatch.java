@@ -253,8 +253,8 @@ public class TetrisMatch {
 //
 //        switch (n) {
 //            case 0: return new BonusRemoveARow("bonusRemoveARow.png");
-//            case 1: return new BonusSlowTimeFall("bonusSlowTimeFall.png", 300);
-//            case 2: return new BonusDoublePoints("bonusDoublePoints.png", 300);
+//            case 1: return new BonusSlowTimeFall("bonusSlowTimeFall.png", 20);
+//            case 2: return new BonusDoublePoints("bonusDoublePoints.png", 60);
 //            case 3: return new BonusBomb("bonusBomb.png");
 //            case 4: return new MalusAdd1Row("malusAdd1Row.png");
 //            case 5: return new MalusAdd2Rows("malusAdd2Rows.png");
@@ -265,7 +265,7 @@ public class TetrisMatch {
 //            default: return null;
 //        }
 
-        Effect effect = new BonusSlowTimeFall("bonusSlowTimeFall.png", 20);
+        Effect effect = new BonusRemoveARow("bonusRemoveARow");
         return effect;
     }
 
