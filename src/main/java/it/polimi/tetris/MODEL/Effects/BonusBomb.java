@@ -8,15 +8,20 @@ import java.util.List;
 
 public class BonusBomb extends Effect {
 
-    // Constructor
+    private int bombRow;
+    private int bombCol;
+
     public BonusBomb(String imageUrl) {
         super(EffectType.BONUS, false, imageUrl);
     }
 
+    public void SetBombPosition(int row, int col) {
+        this.bombRow = row;
+        this.bombCol = col;
+    }
+
     @Override
     public void Apply(TetrisMatch source, List<TetrisMatch> targets) {
-        int x = source.getCurrentTetronimo().getX();
-        int y = source.getCurrentTetronimo().getY();
-        source.getTetrisBoard().ExplodeCells(y, x, 3);
+        source.getTetrisBoard().ExplodeCells(bombRow, bombCol, 1);
     }
 }

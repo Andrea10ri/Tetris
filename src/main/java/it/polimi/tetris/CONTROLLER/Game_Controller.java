@@ -56,8 +56,7 @@ public class Game_Controller extends Controller{
     }
     private PlayerColor playerColor;
 
-    public void SetGame(int remainingTime, int phase,
-                        List<String> opponentNicknames, PlayerColor playerColor) {
+    public void SetGame(int remainingTime, int phase,List<String> opponentNicknames, PlayerColor playerColor) {
         this.playerColor = playerColor; // salva il colore
         lblTimer.setText(FormatTime(remainingTime));
         lblPhase.setText("Phase " + phase);
@@ -254,7 +253,7 @@ public class Game_Controller extends Controller{
             }
         }
 
-        // disegna la cella con effetto
+        //disegna la cella con effetto
         if (response.isCurrentHasEffect() && response.getCurrentShape() != null) {
             int effectRow = response.getEffectCellRow();
             int effectCol = response.getEffectCellCol();
@@ -288,6 +287,26 @@ public class Game_Controller extends Controller{
             for (GameResponse.OpponentBoard op : response.getOpponentBoards()){
                 UpdateOpponentBoard(op.getNickname(), op.getBoard(), op.getScore());}
 
+
+
+        //oscuramento kalamako
+        if (hasKalamako(response)) {
+
+            //overlay scuro
+            gc.setFill(Color.web("#000000", 0.35));
+            gc.fillRect(0, 0, mainBoard.getWidth(), mainBoard.getHeight());
+
+            //immagine macchia
+            Image ink = new Image(getClass().getResourceAsStream(
+                    "/it/polimi/tetris/effects/kalamako.png"));
+
+            //gc.setGlobalAlpha(0.85); // trasparenza immagine
+            gc.drawImage(ink, 0, 0, mainBoard.getWidth(), mainBoard.getHeight());
+            gc.setGlobalAlpha(1.0); // reset
+        }
+
+
+
         //game over
         if (response.isGameOver())
             RenderGameOverOverlay(gc);
@@ -297,6 +316,16 @@ public class Game_Controller extends Controller{
 
     }
 
+
+    private boolean hasKalamako(GameResponse response) {
+        if (response.getActiveEffectInfos() == null) return false;
+
+        for (GameResponse.ActiveEffectInfo info : response.getActiveEffectInfos()) {
+            if ("MalusKalamako".equals(info.getEffectName()))
+                return true;
+        }
+        return false;
+    }
 
     //metodo che gestisce dinamicamente le immagini e il timer degli effetti attivati
     private void RenderActiveEffects(ArrayList<GameResponse.ActiveEffectInfo> effects) {
@@ -333,7 +362,6 @@ public class Game_Controller extends Controller{
             activeEffectsContainer.getChildren().add(effectPane);
         }
     }
-
 
     private void DrawEffectCell(GraphicsContext gc, int row, int col, int cellSize, String effectName) {
         if (row < 0 || row >= ROWS || col < 0 || col >= COLS) return;

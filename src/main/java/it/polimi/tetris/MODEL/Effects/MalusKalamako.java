@@ -34,7 +34,16 @@ public class MalusKalamako extends Effect {
 
     @Override
     public void Apply(TetrisMatch source, List<TetrisMatch> targets) {
-        for (TetrisMatch target : targets)
-            target.AddEffect(this);
+
+        for (TetrisMatch target : targets){
+
+
+        //se esiste un bonus già attivato dello stesso tipo lo sostituisco
+        if (target.HasActiveEffect(MalusKalamako.class)) {
+            target.getActiveEffects().removeIf(e -> e instanceof MalusKalamako);
+        }
+
+        target.AddEffect(this);
+        }
     }
 }

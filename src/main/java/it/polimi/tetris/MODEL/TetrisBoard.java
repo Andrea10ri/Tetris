@@ -2,6 +2,7 @@ package it.polimi.tetris.MODEL;
 
 import it.polimi.tetris.MODEL.ENUMS.CellStatus;
 import it.polimi.tetris.MODEL.ENUMS.TetronimoColor;
+import it.polimi.tetris.MODEL.Effects.BonusBomb;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,14 +104,24 @@ public class TetrisBoard {
                 int boardRow = tY + r;
                 int boardCol = tX + c;
 
-                // se è la cella speciale passa l'effetto, altrimenti null
-                if (t.getHasEffect() && r == t.getyEffect() && c == t.getxEffect())
-                    gridTable[boardRow][boardCol].Occupy(t.getTetronimoColor(), t.getEffect());
-                else
+                // se è la cella speciale passa l'effetto
+                if (t.getHasEffect() && r == t.getyEffect() && c == t.getxEffect()) {
+
+                    Effect eff = t.getEffect();
+
+                    // SE È UNA BOMBA → salva la posizione
+                    if (eff instanceof BonusBomb bomb)
+                        bomb.SetBombPosition(boardRow, boardCol);
+
+                    gridTable[boardRow][boardCol].Occupy(t.getTetronimoColor(), eff);
+                }
+                else {
                     gridTable[boardRow][boardCol].Occupy(t.getTetronimoColor(), null);
+                }
             }
         }
     }
+
 
     // shifta tutte le righe verso l'alto di 1
     public void AddGarbageRow() {

@@ -265,7 +265,7 @@ public class TetrisMatch {
 //            default: return null;
 //        }
 
-        Effect effect = new BonusRemoveARow("bonusRemoveARow");
+        Effect effect = new MalusKalamako("malusKalamako.png",20);
         return effect;
     }
 
