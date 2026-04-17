@@ -37,7 +37,6 @@ public class MalusKalamako extends Effect {
 
         for (TetrisMatch target : targets){
 
-
         //se esiste un bonus già attivato dello stesso tipo lo sostituisco
         if (target.HasActiveEffect(MalusKalamako.class)) {
             target.getActiveEffects().removeIf(e -> e instanceof MalusKalamako);

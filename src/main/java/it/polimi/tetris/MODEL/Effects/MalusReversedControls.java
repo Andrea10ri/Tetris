@@ -34,7 +34,14 @@ public class MalusReversedControls extends Effect {
 
     @Override
     public void Apply(TetrisMatch source, List<TetrisMatch> targets) {
-        for (TetrisMatch target : targets)
+        for (TetrisMatch target : targets){
+
+            //se esiste un bonus già attivato dello stesso tipo lo sostituisco
+            if (target.HasActiveEffect(MalusReversedControls.class)) {
+                target.getActiveEffects().removeIf(e -> e instanceof MalusReversedControls);
+            }
+
             target.AddEffect(this);
+        }
     }
 }

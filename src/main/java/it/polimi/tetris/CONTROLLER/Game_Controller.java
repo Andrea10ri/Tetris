@@ -293,16 +293,15 @@ public class Game_Controller extends Controller{
         if (hasKalamako(response)) {
 
             //overlay scuro
-            gc.setFill(Color.web("#000000", 0.35));
+            gc.setFill(Color.web("#000000", 0.45));
             gc.fillRect(0, 0, mainBoard.getWidth(), mainBoard.getHeight());
 
             //immagine macchia
-            Image ink = new Image(getClass().getResourceAsStream(
-                    "/it/polimi/tetris/effects/kalamako.png"));
+            Image ink = new Image(getClass().getResourceAsStream("/it/polimi/tetris/effects/kalamako.png"));
 
-            //gc.setGlobalAlpha(0.85); // trasparenza immagine
+            //gc.setGlobalAlpha(0.85); //trasparenza immagine
             gc.drawImage(ink, 0, 0, mainBoard.getWidth(), mainBoard.getHeight());
-            gc.setGlobalAlpha(1.0); // reset
+            gc.setGlobalAlpha(1.0); //reset
         }
 
 

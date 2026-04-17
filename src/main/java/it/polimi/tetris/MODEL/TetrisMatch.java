@@ -28,6 +28,7 @@ public class TetrisMatch {
     private Consumer<Integer> onRowsCleared;      //avvisa Game di quante righe sono state cancellate
     private Consumer<Effect> onEffectTriggered;    //avvisa Game di quale effetto è stato triggerato
     private Consumer<TetrisMatch> onGameOver;      //avvisa Game che questo giocatore è in game over
+    private boolean switched= false;
 
     public TetrisMatch(TetrisBoard tetrisBoard, Tetronimo currentTetronimo, Tetronimo nextTetronimo, int fallingVelocity, int score, ArrayList<Effect> activeEffects) {
         this.tetrisBoard = tetrisBoard;
@@ -260,12 +261,12 @@ public class TetrisMatch {
 //            case 5: return new MalusAdd2Rows("malusAdd2Rows.png");
 //            case 6: return new MalusHalvePoints("malusHalvePoints.png");
 //            case 7: return new MalusDoubleTetronimo("malusDoubleTetronimo.png");
-//            case 8: return new MalusKalamako("malusKalamako.png", 600);
+//            case 8: return new MalusKalamako("malusKalamako.png",20);
 //            case 9: return new MalusReversedControls("malusReversedControls.png", 600);
 //            default: return null;
 //        }
 
-        Effect effect = new MalusKalamako("malusKalamako.png",20);
+        Effect effect = new MalusReversedControls("malusReversedControls.png",20);
         return effect;
     }
 
@@ -324,29 +325,48 @@ public class TetrisMatch {
 
     //Movimento laterale
     public void MoveLeft() {
-        if (HasActiveEffect(MalusReversedControls.class))
+
+        //malus reversed attivo
+        if (HasActiveEffect(MalusReversedControls.class) && !switched) {
+            switched = true;
             MoveRight();
+        }
+
         else {
+
             Tetronimo moved = currentTetronimo.Copy();
             moved.setX(moved.getX() - 1);
-            if (tetrisBoard.IsValidPosition(moved))
+            if (tetrisBoard.IsValidPosition(moved)){
                 currentTetronimo = moved;
 
-            else
+            }
+
+            else {
                 System.out.println("Left move fail");
+            }
+
+            switched = false;
         }
     }
 
     public void MoveRight() {
-        if (HasActiveEffect(MalusReversedControls.class))
+        if (HasActiveEffect(MalusReversedControls.class) && !switched){
+            switched = true;
             MoveLeft();
+        }
+
         else {
             Tetronimo moved = currentTetronimo.Copy();
             moved.setX(moved.getX() + 1);
-            if (tetrisBoard.IsValidPosition(moved))
+            if (tetrisBoard.IsValidPosition(moved)) {
+
                 currentTetronimo = moved;
-            else
+            }
+            else {
                 System.out.println("Right move fail");
+            }
+
+            switched = false;
         }
     }
 
@@ -394,7 +414,7 @@ public class TetrisMatch {
     public void TickEffects() {
         activeEffects.removeIf(e -> {
 
-            // decrementa ogni secondo reale
+            //decrementa ogni secondo reale
             if (tickCounter % 2 == 0)
                 e.Tick();
 
