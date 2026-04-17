@@ -266,7 +266,7 @@ public class TetrisMatch {
 //            default: return null;
 //        }
 
-        Effect effect = new MalusReversedControls("malusReversedControls.png",20);
+        Effect effect = new MalusHalvePoints("malusHalvePoints.png");
         return effect;
     }
 

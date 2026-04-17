@@ -5,6 +5,7 @@ import it.polimi.tetris.MODEL.Effect;
 import it.polimi.tetris.MODEL.TetrisMatch;
 
 import java.util.List;
+import java.util.Random;
 
 public class MalusHalvePoints extends Effect {
 
@@ -15,7 +16,14 @@ public class MalusHalvePoints extends Effect {
 
     @Override
     public void Apply(TetrisMatch source, List<TetrisMatch> targets) {
-        for (TetrisMatch target : targets)
-            target.HalveScore();
+
+        if (targets == null || targets.isEmpty()) return;
+
+        Random random = new Random();
+        int n = random.nextInt(targets.size());
+
+        TetrisMatch target = targets.get(n);
+        target.HalveScore();
+
     }
 }
