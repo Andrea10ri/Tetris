@@ -167,14 +167,15 @@ public class Game {
     }
 
     private void OnEffectTriggered(Player source, Effect effect) {
-        // i bonus si applicano al giocatore stesso
+        //i bonus si applicano al giocatore stesso
         if (effect.getEffectType() == EffectType.BONUS) {
             effect.Apply(source.getTetrisMatch(), null);
         }
-        // i malus si applicano agli avversari
+        //i malus si applicano agli avversari
         else {
             List<TetrisMatch> opponents = Players.stream()
-                    .filter(p -> p != source)
+                    .filter(p -> p != source)//escludo me stesso
+                    .filter(p -> !p.getTetrisMatch().getTetrisBoard().IsGameOver()) //escludo i game over
                     .map(Player::getTetrisMatch)
                     .collect(Collectors.toList());
 

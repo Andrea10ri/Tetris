@@ -284,6 +284,8 @@ public class ClientHandler implements Runnable {
         //timer del tick
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
+
+
             @Override
             public void run() {
                 Game game = getMyGame();
@@ -293,7 +295,10 @@ public class ClientHandler implements Runnable {
                 }
 
                 if (player.getTetrisMatch().getTetrisBoard().IsGameOver()) {
-                    return;
+                    response=new GameResponse("FINISH GAME","", "");
+
+                    // Send Response
+                    SendResponse(response);
                 }
 
                 //tick sul match del giocatore
@@ -322,7 +327,7 @@ public class ClientHandler implements Runnable {
 
         command = new GameCommand();
         String message = "";
-        while (!clientSocket.isClosed()) {
+        while (!clientSocket.isClosed() && !command.getCommandName().equals("FinishGame")) {
             try {
                 message = in.readLine();
                 System.out.println("Received: " + message);
@@ -435,7 +440,10 @@ public class ClientHandler implements Runnable {
                 opBoards.add(new GameResponse.OpponentBoard(
                         p.getNickname(),
                         BuildBoardArray(p.getTetrisMatch().getTetrisBoard()),
-                        p.getTetrisMatch().getScore()
+                        p.getTetrisMatch().getScore(),
+                        p.getTetrisMatch().getTetrisBoard().IsGameOver()
+
+
                 ));
             }
         }

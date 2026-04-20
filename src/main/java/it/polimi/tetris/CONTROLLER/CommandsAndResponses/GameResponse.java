@@ -173,16 +173,19 @@ public class GameResponse extends Response {
         private String nickname;
         private int[][] board;
         private int score;
+        private boolean gameOver;
 
-        public OpponentBoard(String nickname, int[][] board, int score) {
+        public OpponentBoard(String nickname, int[][] board, int score,  boolean gameOver) {
             this.nickname = nickname;
             this.board = board;
             this.score = score;
+            this.gameOver = gameOver;
         }
 
         public String getNickname() { return nickname; }
         public int[][] getBoard() { return board; }
         public int getScore() { return score; }
+        public boolean isGameOver() { return gameOver; }
     }
 
     private ArrayList<OpponentBoard> opponentBoards;
@@ -206,6 +209,7 @@ public class GameResponse extends Response {
         public int getRemainingTicks() { return remainingTicks; }
         public int getTotalTicks() { return totalTicks; }
     }
+
 
     private ArrayList<ActiveEffectInfo> activeEffectInfos;
     public ArrayList<ActiveEffectInfo> getActiveEffectInfos() { return activeEffectInfos; }

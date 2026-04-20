@@ -253,6 +253,16 @@ public class ClientThread extends Thread {
                     gameController.RenderGameState(gameResponse);
                 });
                 break;
+
+            case "FINISH GAME":
+
+                GameCommand cmd=new GameCommand("FinishGame", this.nickname);
+                Gson gson=new Gson();
+                String json=gson.toJson(cmd);
+                this.virtualServer.Send(json);
+
+                break;
+
         }
     }
     /**

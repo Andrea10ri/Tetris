@@ -269,7 +269,7 @@ public class Game_Controller extends Controller{
             }
         }
 
-        // disegna icone sulle celle della board con effetto
+        //disegna icone sulle celle della board con effetto
         if (response.getEffectCells() != null)
             for (int[] cell : response.getEffectCells())
                 DrawEffectCell(gc, cell[0], cell[1], CELL_SIZE, IntToEffectName(cell[2]));
@@ -285,7 +285,8 @@ public class Game_Controller extends Controller{
 
         if (response.getOpponentBoards() != null)
             for (GameResponse.OpponentBoard op : response.getOpponentBoards()){
-                UpdateOpponentBoard(op.getNickname(), op.getBoard(), op.getScore());}
+                UpdateOpponentBoard(op.getNickname(), op.getBoard(), op.getScore(), op.isGameOver());
+            }
 
 
 
@@ -365,23 +366,13 @@ public class Game_Controller extends Controller{
     private void DrawEffectCell(GraphicsContext gc, int row, int col, int cellSize, String effectName) {
         if (row < 0 || row >= ROWS || col < 0 || col >= COLS) return;
 
-        // bordo giallo
-        gc.setStroke(Color.YELLOW);
-        gc.setLineWidth(2);
-        gc.strokeRoundRect(col * cellSize + 1, row * cellSize + 1,
-                cellSize - 2, cellSize - 2, 3, 3);
 
         // icona effetto
         Image icon = GetEffectIcon(effectName);
-        if (icon != null)
+
             gc.drawImage(icon, col * cellSize + 3, row * cellSize + 3,
                     cellSize - 6, cellSize - 6);
-        else {
-            // fallback pallino bianco
-            gc.setFill(Color.web("#ffffff", 0.8));
-            gc.fillOval(col * cellSize + cellSize/2 - 4,
-                    row * cellSize + cellSize/2 - 4, 8, 8);
-        }
+
     }
 
     private Image GetEffectIcon(String effectName) {
@@ -395,7 +386,7 @@ public class Game_Controller extends Controller{
         }
     }
 
-    private void UpdateOpponentBoard(String nickname, int[][] board, int score) {
+    private void UpdateOpponentBoard(String nickname, int[][] board, int score, boolean gameOver) {
         Canvas miniBoard = (Canvas) opponentsContainer.lookup("#board_" + nickname);
         Label scoreLabel = (Label) opponentsContainer.lookup("#score_" + nickname);
 
@@ -403,12 +394,20 @@ public class Game_Controller extends Controller{
             GraphicsContext gc = miniBoard.getGraphicsContext2D();
             InitializeMiniBoard(gc);
             if (board != null)
-                for (int r = 0; r < ROWS; r++){
-                    for (int c = 0; c < COLS; c++){
-                        if (board[r][c] != 0){
-                            DrawCell(gc, r, c, IntToColor(board[r][c]), MINI_CELL);}
-                    }
-                }
+                for (int r = 0; r < ROWS; r++)
+                    for (int c = 0; c < COLS; c++)
+                        if (board[r][c] != 0)
+                            DrawCell(gc, r, c, IntToColor(board[r][c]), MINI_CELL);
+
+            //overlay game over sulla mini board
+            if (gameOver) {
+                gc.setFill(Color.web("#000000", 0.65));
+                gc.fillRect(0, 0, miniBoard.getWidth(), miniBoard.getHeight());
+                gc.setFill(Color.web("#ff4455"));
+                gc.setFont(javafx.scene.text.Font.font("Courier New", javafx.scene.text.FontWeight.BOLD, 8));
+                gc.setTextAlign(javafx.scene.text.TextAlignment.CENTER);
+                gc.fillText("GAME OVER", miniBoard.getWidth() / 2, miniBoard.getHeight() / 2);
+            }
         }
 
         if (scoreLabel != null)

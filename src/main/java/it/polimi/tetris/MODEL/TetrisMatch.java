@@ -111,7 +111,7 @@ public class TetrisMatch {
 
         Random random = new Random();
         int n = random.nextInt(7); //generating the tetronimo type
-        int m = random.nextInt(2); //generating if the tetronimo has an effect
+        int m = random.nextInt(4); //generating if the tetronimo has an effect
 
         System.out.println("------------------");
         System.out.println(m);
@@ -249,25 +249,24 @@ public class TetrisMatch {
 
 
     private Effect GenerateRandomEffect() {
-//        Random random = new Random();
-//        int n = random.nextInt(10); // 10 effetti totali (per ora)
-//
-//        switch (n) {
-//            case 0: return new BonusRemoveARow("bonusRemoveARow.png");
-//            case 1: return new BonusSlowTimeFall("bonusSlowTimeFall.png", 20);
-//            case 2: return new BonusDoublePoints("bonusDoublePoints.png", 60);
-//            case 3: return new BonusBomb("bonusBomb.png");
-//            case 4: return new MalusAdd1Row("malusAdd1Row.png");
-//            case 5: return new MalusAdd2Rows("malusAdd2Rows.png");
-//            case 6: return new MalusHalvePoints("malusHalvePoints.png");
-//            case 7: return new MalusDoubleTetronimo("malusDoubleTetronimo.png");
-//            case 8: return new MalusKalamako("malusKalamako.png",20);
-//            case 9: return new MalusReversedControls("malusReversedControls.png", 600);
-//            default: return null;
-//        }
+        Random random = new Random();
+        int n = random.nextInt(9); //10 effetti totali (per ora)
 
-        Effect effect = new MalusHalvePoints("malusHalvePoints.png");
-        return effect;
+        switch (n) {
+            case 0: return new BonusRemoveARow("bonusRemoveARow.png");
+            case 1: return new BonusSlowTimeFall("bonusSlowTimeFall.png", 20);
+            case 2: return new BonusDoublePoints("bonusDoublePoints.png", 60);
+            case 3: return new BonusBomb("bonusBomb.png");
+            case 4: return new MalusAdd1Row("malusAdd1Row.png");
+            case 5: return new MalusAdd2Rows("malusAdd2Rows.png");
+            case 6: return new MalusHalvePoints("malusHalvePoints.png");
+            //case 7: return new MalusDoubleTetronimo("malusDoubleTetronimo.png");
+            case 7: return new MalusKalamako("malusKalamako.png",20);
+            case 8: return new MalusReversedControls("malusReversedControls.png", 20);
+            default: return null;
+        }
+
+
     }
 
     public void SpawnNextTetronimo() {
