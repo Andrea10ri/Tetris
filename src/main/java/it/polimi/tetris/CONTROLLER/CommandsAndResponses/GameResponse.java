@@ -22,6 +22,7 @@ public class GameResponse extends Response {
     private int nextColor;
     private int score;
     private boolean gameOver;
+    private ArrayList<String> rankingInfo;
 
 
     private boolean currentHasEffect;
@@ -167,6 +168,14 @@ public class GameResponse extends Response {
     public boolean isGameOver() { return gameOver; }
 
     public void setGameOver(boolean gameOver) { this.gameOver = gameOver; }
+
+    public ArrayList<String> getRankingInfo() {
+        return rankingInfo;
+    }
+
+    public void setRankingInfo(ArrayList<String> rankingInfo) {
+        this.rankingInfo = rankingInfo;
+    }
 
     //classe interna usata solo per supporto
     public static class OpponentBoard {

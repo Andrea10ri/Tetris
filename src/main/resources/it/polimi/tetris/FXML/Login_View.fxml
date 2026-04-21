@@ -5,12 +5,12 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.tetris.CONTROLLER.Login_Controller">
    <children>
-      <Pane prefHeight="400.0" prefWidth="600.0" >
+      <Pane prefHeight="400.0" prefWidth="600.0">
          <children>
-            <Button fx:id="btnInsertNick" layoutX="394.0" layoutY="252.0" mnemonicParsing="false" onAction="#onInsertNicknameClick" prefHeight="25.0" prefWidth="149.0" text="Button" />
+            <Button fx:id="btnInsertNick" layoutX="394.0" layoutY="252.0" mnemonicParsing="false" onAction="#onInsertNicknameClick" prefHeight="25.0" prefWidth="149.0" text="Enter" />
             <TextField fx:id="txtNickname" layoutX="394.0" layoutY="188.0" />
             <Separator layoutX="297.0" layoutY="100.0" orientation="VERTICAL" prefHeight="200.0" />
-            <Label fx:id="lblNickname" layoutX="442.0" layoutY="147.0" text="Nickname" />
+            <Label fx:id="lblNickname" layoutX="419.0" layoutY="152.0" text="Insert your nick" />
          </children></Pane>
    </children>
 </AnchorPane>

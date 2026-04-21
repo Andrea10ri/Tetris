@@ -276,9 +276,7 @@ public class ClientHandler implements Runnable {
         }
 
         //info iniziali
-        response = new GameResponse("SET GAME", "", player.getNickname(),
-                g.getRemainingTime(), g.getGamePhase(),
-                getEnemiesNicks(), this.player.getPlayerColor());
+        response = new GameResponse("SET GAME", "", player.getNickname(), g.getRemainingTime(), g.getGamePhase(),getEnemiesNicks(), this.player.getPlayerColor());
         SendResponse(response);
 
         //timer del tick
@@ -401,6 +399,16 @@ public class ClientHandler implements Runnable {
         gs.setScore(match.getScore());
         gs.setGameOver(player.getTetrisMatch().getTetrisBoard().IsGameOver());
 
+
+        ArrayList<String> rankingInfo = new ArrayList<>();
+        int pos = 1;
+        for (Player p : getMyGame().getRanking()) {
+            if (p == null) continue;
+            rankingInfo.add(pos + ". " + p.getNickname() + " - " + p.getTetrisMatch().getScore());
+            pos++;
+        }
+        gs.setRankingInfo(rankingInfo);
+
          // effetto del tetromino corrente
         gs.setCurrentHasEffect(match.getCurrentTetronimo().getHasEffect());
         if (match.getCurrentTetronimo().getHasEffect() && match.getCurrentTetronimo().getEffect() != null) {
@@ -448,6 +456,7 @@ public class ClientHandler implements Runnable {
             }
         }
         gs.setOpponentBoards(opBoards);
+
 
         SendResponse(gs);
     }

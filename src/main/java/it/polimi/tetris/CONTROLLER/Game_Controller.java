@@ -2,6 +2,7 @@ package it.polimi.tetris.CONTROLLER;
 
 import it.polimi.tetris.CONTROLLER.CommandsAndResponses.GameResponse;
 import it.polimi.tetris.MODEL.ENUMS.PlayerColor;
+import it.polimi.tetris.MODEL.Player;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -12,6 +13,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +39,8 @@ public class Game_Controller extends Controller{
     private Label lblEffects;
     @FXML
     private Canvas nextPiece;
-
+    @FXML
+    private VBox rankingList;
     @FXML
     private HBox activeEffectsContainer;
 
@@ -216,9 +220,6 @@ public class Game_Controller extends Controller{
         //ridisegna sfondo e griglia
         InitializeMainBoard(playerColor);
 
-
-        System.out.println("CLIENT - hasEffect: " + response.isCurrentHasEffect());
-
         //disegna le celle occupate
         if (response.getBoard() != null)
             for (int r = 0; r < ROWS; r++){
@@ -283,6 +284,8 @@ public class Game_Controller extends Controller{
         if (lblScore != null)
             lblScore.setText(String.valueOf(response.getScore()));
 
+        UpdateRanking(response.getRankingInfo());
+
         if (response.getOpponentBoards() != null)
             for (GameResponse.OpponentBoard op : response.getOpponentBoards()){
                 UpdateOpponentBoard(op.getNickname(), op.getBoard(), op.getScore(), op.isGameOver());
@@ -325,6 +328,16 @@ public class Game_Controller extends Controller{
                 return true;
         }
         return false;
+    }
+
+    private void UpdateRanking(ArrayList<String> rankingInfo) {
+        if (rankingInfo == null || rankingList == null) return;
+        rankingList.getChildren().clear();
+        for (String entry : rankingInfo) {
+            Label lbl = new Label(entry);
+            lbl.setStyle("-fx-text-fill: white; -fx-font-size: 12px;");
+            rankingList.getChildren().add(lbl);
+        }
     }
 
     //metodo che gestisce dinamicamente le immagini e il timer degli effetti attivati

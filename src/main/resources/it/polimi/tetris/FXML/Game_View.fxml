@@ -5,7 +5,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox alignment="CENTER" prefHeight="600.0" prefWidth="900.0" spacing="20" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.tetris.CONTROLLER.Game_Controller">
+<HBox alignment="CENTER" prefHeight=".0" prefWidth="900.0" spacing="20" xmlns="http://javafx.com/javafx/17.0.12"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="it.polimi.tetris.CONTROLLER.Game_Controller"
+      style="-fx-background-color: radial-gradient(center 50% 50%, radius 80%, #1E3970, #03051C);">
+
 
     <padding>
         <Insets bottom="20" left="20" right="20" top="20" />
@@ -16,8 +20,8 @@
 
         <!-- Timer e fase -->
         <HBox alignment="CENTER" spacing="15">
-            <Label fx:id="lblTimer" style="-fx-font-size: 22px; -fx-font-weight: bold;" text="tmr" />
-            <Label fx:id="lblPhase" style="-fx-font-size: 14px;" text="phase" />
+            <Label fx:id="lblTimer" style="-fx-font-size: 22px; -fx-font-weight: bold;" text="tmr" textFill="WHITE" />
+            <Label fx:id="lblPhase" style="-fx-font-size: 14px;" text="phase" textFill="WHITE" />
         </HBox>
 
 
@@ -26,10 +30,6 @@
         <!-- Score e linee -->
         <HBox alignment="CENTER" spacing="20">
             <VBox alignment="CENTER">
-                <Label style="-fx-font-size: 10px;" text="SCORE" />
-                <Label fx:id="lblScore" style="-fx-font-size: 20px; -fx-font-weight: bold;" text="0" />
-            </VBox>
-            <VBox alignment="CENTER">
                 <Label style="-fx-font-size: 10px;" text="NEXT" />
                 <Canvas fx:id="nextPiece" height="80" width="80" />
             </VBox>
@@ -37,9 +37,18 @@
 
 
         <!--effetti attivati-->
-        <HBox fx:id="activeEffectsContainer" spacing="8" alignment="CENTER"/>
+        <HBox fx:id="activeEffectsContainer" alignment="CENTER" spacing="8" />
         <Label fx:id="lblEffects" style="-fx-font-size: 11px; -fx-text-fill: orange;" text="" />
 
+    </VBox>
+
+    <VBox fx:id="rankingContainer" alignment="TOP_CENTER" prefHeight="783.0" prefWidth="246.0" spacing="8" style="-fx-padding: 20;">
+        <Label style="-fx-font-weight: bold; -fx-text-fill: white; -fx-font-size: 14px;" text="RANKING" />
+        <VBox fx:id="rankingList" spacing="5" />
+         <VBox alignment="CENTER">
+             <Label style="-fx-font-size: 10px;" text="SCORE" textFill="WHITE" />
+             <Label fx:id="lblScore" style="-fx-font-size: 20px; -fx-font-weight: bold;" text="0" textFill="WHITE" />
+         </VBox>
     </VBox>
 
     <!-- DESTRA: board avversari -->

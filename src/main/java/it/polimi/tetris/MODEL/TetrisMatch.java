@@ -111,7 +111,7 @@ public class TetrisMatch {
 
         Random random = new Random();
         int n = random.nextInt(7); //generating the tetronimo type
-        int m = random.nextInt(4); //generating if the tetronimo has an effect
+        int m = random.nextInt(3); //generating if the tetronimo has an effect
 
         System.out.println("------------------");
         System.out.println(m);

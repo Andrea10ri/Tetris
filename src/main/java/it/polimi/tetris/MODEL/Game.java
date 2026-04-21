@@ -134,18 +134,20 @@ public class Game {
 
 
     private void OnRowsCleared(Player source, int cleared) {
-        // fase 2: eliminare più di 2 righe aggiunge 1 riga a un avversario casuale
+        //fase 2: eliminare più di 2 righe aggiunge 1 riga a un avversario casuale
         if (gamePhase >= 2 && cleared > 2) {
             Player target = GetRandomOpponent(source);
             if (target != null)
                 target.getTetrisMatch().getTetrisBoard().AddGarbageRow();
         }
 
-        // fase 3: eliminare più di 2 righe aggiunge 2 righe a un avversario casuale
+        //fase 3: eliminare più di 2 righe aggiunge 2 righe a un avversario casuale
         if (gamePhase >= 3 && cleared > 2) {
             Player target = GetRandomOpponent(source);
-            if (target != null)
+            if (target != null) {
                 target.getTetrisMatch().getTetrisBoard().AddGarbageRow();
+                target.getTetrisMatch().getTetrisBoard().AddGarbageRow();
+            }
         }
 
         UpdateRanking();
@@ -158,11 +160,9 @@ public class Game {
         if (opponents.isEmpty()) return null;
         return opponents.get(new Random().nextInt(opponents.size()));
     }
-
+    //ordina i giocatori per punteggio decrescente e aggiorna il rank
     private void UpdateRanking() {
-        //ordina i giocatori per punteggio decrescente
         Players.sort((p1, p2) -> p2.getTetrisMatch().getScore() - p1.getTetrisMatch().getScore());
-        // aggiorna il ranking
         ranking = Players.toArray(new Player[0]);
     }
 
