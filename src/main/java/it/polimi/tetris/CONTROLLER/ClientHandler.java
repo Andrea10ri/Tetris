@@ -443,7 +443,7 @@ public class ClientHandler implements Runnable {
         //mando gli avversari
         Game g = getMyGame();
         ArrayList<GameResponse.OpponentBoard> opBoards = new ArrayList<>();
-        for (Player p : g.getPlayers()) {
+        for (Player p : new ArrayList<>(g.getPlayers())) {
             if (!p.getNickname().equals(player.getNickname())) {
                 opBoards.add(new GameResponse.OpponentBoard(
                         p.getNickname(),

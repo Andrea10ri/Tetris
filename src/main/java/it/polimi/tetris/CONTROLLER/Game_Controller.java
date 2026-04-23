@@ -332,6 +332,7 @@ public class Game_Controller extends Controller{
 
     private void UpdateRanking(ArrayList<String> rankingInfo) {
         if (rankingInfo == null || rankingList == null) return;
+
         rankingList.getChildren().clear();
         for (String entry : rankingInfo) {
             Label lbl = new Label(entry);
@@ -511,5 +512,36 @@ public class Game_Controller extends Controller{
         for (int r = 0; r < ROWS; r++)
             for (int c = 0; c < COLS; c++)
                 gc.strokeRect(c * MINI_CELL, r * MINI_CELL, MINI_CELL, MINI_CELL);
+    }
+
+
+    //metodo che prende dal ranking info nome e colore e mostra la classifica finale
+    public void ShowWinner(ArrayList<String> rankingInfo) {
+        GraphicsContext gc = mainBoard.getGraphicsContext2D();
+
+        //overlay scuro
+        gc.setFill(Color.web("#000000", 0.80));
+        gc.fillRect(0, 0, mainBoard.getWidth(), mainBoard.getHeight());
+
+
+        gc.setFont(Font.font("Courier New", FontWeight.BOLD, 22));
+        gc.setTextAlign(javafx.scene.text.TextAlignment.CENTER);
+        gc.setFill(Color.web("#ffcc00"));
+        gc.fillText("YOU'RE THE WINNER!", mainBoard.getWidth() / 2, 80);
+
+        //ranking finale
+        if (rankingInfo != null) {
+            double y = 130;
+            for (String entry : rankingInfo) {
+                String[] parts = entry.split("\\|");
+                if (parts.length < 3) continue;
+                String text = parts[0] + parts[1];
+                String colorHex = parts[2];
+                gc.setFill(Color.web(colorHex));
+                gc.setFont(Font.font("Courier New", FontWeight.BOLD, 16));
+                gc.fillText(text, mainBoard.getWidth() / 2, y);
+                y += 35;
+            }
+        }
     }
 }

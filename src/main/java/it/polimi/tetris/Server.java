@@ -1,10 +1,13 @@
 package it.polimi.tetris;
 
 import it.polimi.tetris.CONTROLLER.ClientHandler;
+import it.polimi.tetris.CONTROLLER.CommandsAndResponses.GameResponse;
 import it.polimi.tetris.CONTROLLER.CommandsAndResponses.Response;
 import it.polimi.tetris.MODEL.ENUMS.LobbyStatus;
+import it.polimi.tetris.MODEL.ENUMS.PlayerColor;
 import it.polimi.tetris.MODEL.Game;
 import it.polimi.tetris.MODEL.Lobby;
+import it.polimi.tetris.MODEL.Player;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -76,6 +79,34 @@ public class Server {
 
     public void AddGame(Game game) {
         activeGames.add(game);
+        game.setOnGameEnd(() -> {
+            Player[] ranking = game.getRanking();
+            ArrayList<String> rankingInfo = new ArrayList<>();
+            int pos = 1;
+            for (Player p : ranking) {
+                if (p == null) continue;
+                String colorHex = PlayerColorToHex(p.getPlayerColor());
+                rankingInfo.add(pos + "|" + p.getNickname() + " - " + p.getTetrisMatch().getScore() + "|" + colorHex);
+                pos++;
+            }
+            GameResponse endResponse = new GameResponse("GAME_ENDED", "", "");
+            endResponse.setRankingInfo(rankingInfo);
+            for (Lobby lo : getLobbies())
+                if (lo.getLobbyId() == game.getGameID()) {
+                    SendToAll(endResponse, lo);
+                    break;
+                }
+        });
+    }
+
+    private String PlayerColorToHex(PlayerColor color) {
+        if (color == null) return "#ffffff";
+        return switch (color) {
+            case LIGHTBLUE -> "#00bfff";
+            case RED -> "#ff4455";
+            case PURPLE -> "#aa44ff";
+            case LIGHTGREEN -> "#44ff88";
+        };
     }
 
     public void SendToAll(Response response, Lobby lobby) {

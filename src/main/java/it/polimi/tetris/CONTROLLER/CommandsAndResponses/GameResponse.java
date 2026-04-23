@@ -224,4 +224,6 @@ public class GameResponse extends Response {
     public ArrayList<ActiveEffectInfo> getActiveEffectInfos() { return activeEffectInfos; }
     public void setActiveEffectInfos(ArrayList<ActiveEffectInfo> activeEffectInfos) { this.activeEffectInfos = activeEffectInfos; }
 
+
+
 }

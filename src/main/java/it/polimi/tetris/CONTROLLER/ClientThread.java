@@ -263,6 +263,13 @@ public class ClientThread extends Thread {
 
                 break;
 
+            case "GAME_ENDED":
+                Platform.runLater(() -> {
+                    Game_Controller gameController = (Game_Controller) fxmlLoader.getController();
+                    gameController.ShowWinner(gameResponse.getRankingInfo());
+                });
+                break;
+
         }
     }
     /**

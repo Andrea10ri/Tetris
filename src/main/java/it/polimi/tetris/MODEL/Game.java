@@ -131,8 +131,6 @@ public class Game {
         this.status = GameStatus.RUNNING;
     }
 
-
-
     private void OnRowsCleared(Player source, int cleared) {
         //fase 2: eliminare più di 2 righe aggiunge 1 riga a un avversario casuale
         if (gamePhase >= 2 && cleared > 2) {
@@ -160,11 +158,6 @@ public class Game {
         if (opponents.isEmpty()) return null;
         return opponents.get(new Random().nextInt(opponents.size()));
     }
-    //ordina i giocatori per punteggio decrescente e aggiorna il rank
-    private void UpdateRanking() {
-        Players.sort((p1, p2) -> p2.getTetrisMatch().getScore() - p1.getTetrisMatch().getScore());
-        ranking = Players.toArray(new Player[0]);
-    }
 
     private void OnEffectTriggered(Player source, Effect effect) {
         //i bonus si applicano al giocatore stesso
@@ -184,16 +177,22 @@ public class Game {
     }
 
     private void OnPlayerGameOver(Player player) {
-        // aggiorna il ranking
         UpdateRanking();
 
-        // controlla se tutti i giocatori sono in game over
-        boolean allGameOver = Players.stream()
-                .allMatch(p -> p.getTetrisMatch().getTetrisBoard().IsGameOver());
+        //controlla se è rimasto solo un giocatore ancora in gioco
+        long playersStillAlive = Players.stream().filter(p -> !p.getTetrisMatch().getTetrisBoard().IsGameOver()).count();
 
-        if (allGameOver)
+        if (playersStillAlive <= 1) {
             EndGame();
+        }
     }
+
+    //ordina i giocatori per punteggio decrescente e aggiorna il rank
+    private void UpdateRanking() {
+        Players.sort((p1, p2) -> p2.getTetrisMatch().getScore() - p1.getTetrisMatch().getScore());
+        ranking = Players.toArray(new Player[0]);
+    }
+
 
     public void TickTimer() {
         if (status != GameStatus.RUNNING) return;
@@ -236,9 +235,13 @@ public class Game {
             player.getTetrisMatch().setFallingVelocity(player.getTetrisMatch().getFallingVelocity() / 2);
     }
 
+    private Runnable onGameEnd;
+    public void setOnGameEnd(Runnable callback) { this.onGameEnd = callback; }
+
     private void EndGame() {
         this.status = GameStatus.ENDED;
         UpdateRanking();
+        if (onGameEnd != null) onGameEnd.run();
     }
 
 
