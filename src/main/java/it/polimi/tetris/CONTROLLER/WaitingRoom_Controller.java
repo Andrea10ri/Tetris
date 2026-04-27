@@ -6,10 +6,11 @@ import it.polimi.tetris.MODEL.ENUMS.PlayerColor;
 import it.polimi.tetris.MODEL.Lobby;
 import it.polimi.tetris.MODEL.Player;
 import it.polimi.tetris.VIEW.VirtualServer;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -25,12 +26,20 @@ public class WaitingRoom_Controller extends Controller {
     @FXML private Button btnReady;
     @FXML private Label lblTitle;
     @FXML private Label lblStatus;
+    @FXML private Label lblTetromino;
+    @FXML private StackPane loadingIcon;
+    @FXML private ImageView imgTetronimo;
 
+    private Timeline imageSwitchTimeline;
+    private int imageIndex = 0;
     private int maxPlayers;
 
     @Override
     public void initialize(Stage stage, VirtualServer virtualServer, String nickname) {
         super.initialize(stage, virtualServer, nickname);
+
+        startTetronimoAnimation();
+
 
     }
 
@@ -217,4 +226,64 @@ public class WaitingRoom_Controller extends Controller {
 
         timeline.play();
     }
+
+    private void startTetronimoAnimation() {
+
+        // immagine iniziale
+        imgTetronimo.setImage(new Image(
+                getClass().getResourceAsStream("/it/polimi/tetris/Support_images/Animation_J.png")
+        ));
+
+        Timeline timeline = new Timeline();
+        timeline.setCycleCount(Timeline.INDEFINITE);
+
+         int[] tick = {0};
+         int[] imageIndex = {0};
+
+        KeyFrame frame = new KeyFrame(Duration.millis(30), e -> {
+
+            //rotazione
+            imgTetronimo.setRotate(imgTetronimo.getRotate() + 5);
+
+            //ogni tot secondi faccio cambiare l'immagine
+            tick[0]++;
+            if (tick[0] >= 70) {
+                tick[0] = 0;
+                imageIndex[0]++;
+
+                if (imageIndex[0] > 5)
+                    imageIndex[0] = 0;
+
+                switch (imageIndex[0]) {
+                    case 0 -> imgTetronimo.setImage(new Image(
+                            getClass().getResourceAsStream("/it/polimi/tetris/Support_images/Animation_Z.png")
+                    ));
+                    case 1 -> imgTetronimo.setImage(new Image(
+                            getClass().getResourceAsStream("/it/polimi/tetris/Support_images/Animation_T.png")
+                    ));
+                    case 2 -> imgTetronimo.setImage(new Image(
+                            getClass().getResourceAsStream("/it/polimi/tetris/Support_images/Animation_L.png")
+                    ));
+                    case 3 -> imgTetronimo.setImage(new Image(
+                            getClass().getResourceAsStream("/it/polimi/tetris/Support_images/Animation_O.png")
+                    ));
+                    case 4 -> imgTetronimo.setImage(new Image(
+                            getClass().getResourceAsStream("/it/polimi/tetris/Support_images/Animation_S.png")
+                    ));
+                    case 5 -> imgTetronimo.setImage(new Image(
+                            getClass().getResourceAsStream("/it/polimi/tetris/Support_images/Animation_J.png")
+                    ));
+//                    case 6 -> imgTetronimo.setImage(new Image(
+//                            getClass().getResourceAsStream("/it/polimi/tetris/Support_images/Animation_I.png")
+//                    ));
+                }
+            }
+        });
+
+        timeline.getKeyFrames().add(frame);
+        timeline.play();
+    }
+
+
+
 }

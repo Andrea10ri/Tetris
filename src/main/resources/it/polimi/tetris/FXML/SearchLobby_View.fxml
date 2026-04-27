@@ -4,7 +4,10 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.tetris.CONTROLLER.SearchLobby_Controller">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            style="-fx-background-color: linear-gradient(to bottom, #A7D1F2, #5290BF);"
+
+            fx:controller="it.polimi.tetris.CONTROLLER.SearchLobby_Controller">
    <children>
       <Separator layoutX="297.0" layoutY="94.0" orientation="VERTICAL" prefHeight="275.0" prefWidth="1.0" />
       <ListView fx:id="lstLobbies" layoutX="40.0" layoutY="94.0" prefHeight="203.0" prefWidth="238.0" />
