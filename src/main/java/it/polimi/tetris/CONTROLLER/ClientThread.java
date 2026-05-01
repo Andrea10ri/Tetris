@@ -267,6 +267,8 @@ public class ClientThread extends Thread {
                 Platform.runLater(() -> {
                     Game_Controller gameController = (Game_Controller) fxmlLoader.getController();
                     gameController.ShowWinner(gameResponse.getRankingInfo());
+
+                  //  gameController.getMusicPlayer().stop();
                 });
                 break;
 

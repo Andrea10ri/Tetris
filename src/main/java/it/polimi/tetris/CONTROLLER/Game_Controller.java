@@ -2,7 +2,6 @@ package it.polimi.tetris.CONTROLLER;
 
 import it.polimi.tetris.CONTROLLER.CommandsAndResponses.GameResponse;
 import it.polimi.tetris.MODEL.ENUMS.PlayerColor;
-import it.polimi.tetris.MODEL.Player;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -15,13 +14,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Objects;
 
 import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
-
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 public class Game_Controller extends Controller{
 
@@ -44,28 +43,59 @@ public class Game_Controller extends Controller{
     @FXML
     private HBox activeEffectsContainer;
 
-
+    private int previousScore = 0;
     private static final int CELL_SIZE = 30;
     private static final int MINI_CELL = 12;
     private static final int ROWS = 20;
     private static final int COLS = 10;
-
-
-    public Label getLblTimer() {
-        return lblTimer;
-    }
-
-    public void setLblTimer(Label lblTimer) {
-        this.lblTimer = lblTimer;
-    }
+    private MediaPlayer musicPlayer;
     private PlayerColor playerColor;
+    private boolean isgameover = false;
+
+    private void playMusic(String fileName) {
+        if (musicPlayer != null) {
+            musicPlayer.stop();
+        }
+
+        Media media = new Media(
+                Objects.requireNonNull(
+                        getClass().getResource("/it/polimi/tetris/Sounds/" + fileName)
+                ).toExternalForm()
+        );
+
+        musicPlayer = new MediaPlayer(media);
+        musicPlayer.setVolume(0.4);
+        musicPlayer.play();
+    }
+
+    private void playSound(String fileName) {
+        Media media = new Media(
+                Objects.requireNonNull(
+                        getClass().getResource("/it/polimi/tetris/Sounds/" + fileName)
+                ).toExternalForm()
+        );
+
+        MediaPlayer sfx = new MediaPlayer(media);
+        sfx.setVolume(1);
+        sfx.play();
+
+        sfx.setOnEndOfMedia(sfx::dispose);
+    }
+
 
     public void SetGame(int remainingTime, int phase,List<String> opponentNicknames, PlayerColor playerColor) {
+
+        if (SearchLobby_Controller.lobbyBackground != null) {
+            SearchLobby_Controller.lobbyBackground.stop();
+            SearchLobby_Controller.lobbyBackground.dispose();
+        }
+
         this.playerColor = playerColor; // salva il colore
         lblTimer.setText(FormatTime(remainingTime));
         lblPhase.setText("Phase " + phase);
         InitializeMainBoard(playerColor);
         SetupOpponentsBoards(opponentNicknames);
+        playMusic("Tetris_OST.mp3");
     }
 
     //metodo per convertire da int a sessagesimale
@@ -76,25 +106,60 @@ public class Game_Controller extends Controller{
     }
 
     public void SetupKeyboardInput() {
-        mainBoard.getScene().setOnKeyPressed(event -> {
-            String cmd = switch (event.getCode()) {
-                case LEFT -> "MOVE_LEFT";
-                case  A-> "MOVE_LEFT";
-                case RIGHT -> "MOVE_RIGHT";
-                case D -> "MOVE_RIGHT";
-                case UP -> "ROTATE_CW";
-                case W -> "ROTATE_CW";
-                case Z -> "ROTATE_CCW";
-                case ALT -> "ROTATE_CCW";
-                case DOWN -> "SOFT_DROP";
-                case S -> "SOFT_DROP";
-                case SPACE -> "HARD_DROP";
-                default -> null;
-            };
 
-            if (cmd != null)
-                virtualServer.Send("{\"commandName\":\"" + cmd + "\",\"nickname\":\"" + nickname + "\"}");
-        });
+         mainBoard.getScene().setOnKeyPressed(event -> {
+
+             if (isgameover) return;
+
+             String cmd = null;
+
+             switch (event.getCode()) {
+
+                 case LEFT:
+                 case A:
+                     cmd = "MOVE_LEFT";
+                     break;
+
+                 case RIGHT:
+                 case D:
+                     cmd = "MOVE_RIGHT";
+                     break;
+
+                 case UP:
+                 case W:
+                     cmd = "ROTATE_CW";
+                     playSound("Rotate.wav");
+                     break;
+
+                 case Z:
+                 case ALT:
+                     cmd = "ROTATE_CCW";
+                     playSound("Rotate.wav");
+                     break;
+
+                 case DOWN:
+                 case S:
+                     cmd = "SOFT_DROP";
+                     playSound("SoftDrop.wav");
+                     break;
+
+                 case SPACE:
+                     cmd = "HARD_DROP";
+                     playSound("HardDrop.wav");
+                     break;
+
+                 default:
+                     cmd = null;
+                     break;
+             }
+
+
+
+             if (cmd != null)
+                 virtualServer.Send("{\"commandName\":\"" + cmd + "\",\"nickname\":\"" + nickname + "\"}");
+         });
+
+
     }
 
     //metodo che inizializza la propria tetrisboard, del colore scelto
@@ -308,17 +373,22 @@ public class Game_Controller extends Controller{
             gc.setGlobalAlpha(1.0); //reset
         }
 
-
+        //audio elimination row
+        int newScore = response.getScore();
+        if (newScore > previousScore) {
+            playSound("Cleared.wav");
+        }
+        previousScore = newScore;
 
         //game over
-        if (response.isGameOver())
+        if (response.isGameOver()) {
             RenderGameOverOverlay(gc);
-
-
+            isgameover= true;
+         //   musicPlayer.stop();
+        }
 
 
     }
-
 
     private boolean hasKalamako(GameResponse response) {
         if (response.getActiveEffectInfos() == null) return false;
@@ -429,7 +499,11 @@ public class Game_Controller extends Controller{
     }
 
     private void RenderGameOverOverlay(GraphicsContext gc) {
-        // overlay scuro semitrasparente
+
+        //audio
+        playMusic("GameOver.wav");
+
+        //overlay scuro semitrasparente
         gc.setFill(Color.web("#000000", 0.65));
         gc.fillRect(0, 0, mainBoard.getWidth(), mainBoard.getHeight());
 
@@ -514,9 +588,14 @@ public class Game_Controller extends Controller{
                 gc.strokeRect(c * MINI_CELL, r * MINI_CELL, MINI_CELL, MINI_CELL);
     }
 
-
     //metodo che prende dal ranking info nome e colore e mostra la classifica finale
     public void ShowWinner(ArrayList<String> rankingInfo) {
+
+        //audio
+        playMusic("Victory.wav");
+
+        isgameover= true;
+
         GraphicsContext gc = mainBoard.getGraphicsContext2D();
 
         //overlay scuro
@@ -543,5 +622,15 @@ public class Game_Controller extends Controller{
                 y += 35;
             }
         }
+    }
+
+    public Label getLblTimer() {
+        return lblTimer;
+    }
+    public void setLblTimer(Label lblTimer) {
+        this.lblTimer = lblTimer;
+    }
+    public MediaPlayer getMusicPlayer() {
+        return musicPlayer;
     }
 }

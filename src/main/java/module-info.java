@@ -8,6 +8,8 @@ module org.example.tetris {
     requires org.controlsfx.controls;
     requires com.google.gson;
 
+    requires javafx.media;
+
     opens it.polimi.tetris to javafx.fxml;
     opens it.polimi.tetris.CONTROLLER.CommandsAndResponses to com.google.gson;
     exports it.polimi.tetris;

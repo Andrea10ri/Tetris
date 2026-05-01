@@ -4,19 +4,22 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-            style="-fx-background-color: linear-gradient(to bottom, #A7D1F2, #5290BF);"
-
-            fx:controller="it.polimi.tetris.CONTROLLER.SearchLobby_Controller">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: linear-gradient(to bottom, #A7D1F2, #5290BF);" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.tetris.CONTROLLER.SearchLobby_Controller">
    <children>
       <Separator layoutX="297.0" layoutY="94.0" orientation="VERTICAL" prefHeight="275.0" prefWidth="1.0" />
-      <ListView fx:id="lstLobbies" layoutX="40.0" layoutY="94.0" prefHeight="203.0" prefWidth="238.0" />
-      <Label layoutX="111.0" layoutY="56.0" prefHeight="25.0" prefWidth="96.0" text="Choose a lobby" textAlignment="RIGHT" />
-      <Label layoutX="405.0" layoutY="60.0" text="Create a lobby" />
-      <Button fx:id="btnJoinLobby" layoutX="182.0" layoutY="311.0" mnemonicParsing="false" onAction="#OnBtnJoinClick" prefHeight="34.0" prefWidth="96.0" text="Join" />
-      <Button fx:id="btnCreateLobby" layoutX="396.0" layoutY="311.0" mnemonicParsing="false" onAction="#OnBtnCreateLobbyClick" prefHeight="34.0" prefWidth="96.0" text="Create" />
-      <ComboBox fx:id="cmbDuration" layoutX="459.0" layoutY="170.0" prefHeight="25.0" prefWidth="84.0" />
-      <ComboBox fx:id="cmbNumOfPlayers" layoutX="324.0" layoutY="170.0" prefHeight="25.0" prefWidth="84.0" />
+      <ListView fx:id="lstLobbies" layoutX="40.0" layoutY="94.0" onMouseClicked="#OnListLobbyClicked" prefHeight="203.0" prefWidth="238.0" />
+      <Label layoutX="111.0" layoutY="56.0" prefHeight="27.0" prefWidth="154.0" text="Choose a lobby" textAlignment="RIGHT">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label layoutX="405.0" layoutY="60.0" text="Create a lobby">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Button fx:id="btnJoinLobby" disable="true" layoutX="182.0" layoutY="311.0" mnemonicParsing="false" onAction="#OnBtnJoinClick" prefHeight="34.0" prefWidth="96.0" text="Join" />
+      <Button fx:id="btnCreateLobby" disable="true" layoutX="396.0" layoutY="311.0" mnemonicParsing="false" onAction="#OnBtnCreateLobbyClick" prefHeight="34.0" prefWidth="96.0" text="Create" />
+      <ComboBox fx:id="cmbDuration" layoutX="459.0" layoutY="170.0" onAction="#OnListDurationClicked" prefHeight="25.0" prefWidth="84.0" />
+      <ComboBox fx:id="cmbNumOfPlayers" layoutX="324.0" layoutY="170.0" onAction="#OnListNumberClicked" prefHeight="25.0" prefWidth="84.0" />
       <Label layoutX="453.0" layoutY="128.0" prefHeight="25.0" prefWidth="109.0" text="Match duration" />
       <Label layoutX="311.0" layoutY="132.0" prefHeight="17.0" prefWidth="109.0" text="Number of players" />
       <Label fx:id="lblWelcome" layoutX="26.0" layoutY="22.0" text="Label" />

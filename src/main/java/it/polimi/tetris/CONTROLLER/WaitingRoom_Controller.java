@@ -12,6 +12,8 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -33,6 +35,11 @@ public class WaitingRoom_Controller extends Controller {
     private Timeline imageSwitchTimeline;
     private int imageIndex = 0;
     private int maxPlayers;
+
+    //click audio
+    private static final AudioClip clickSound = new AudioClip(Game_Controller.class.getResource("/it/polimi/tetris/Sounds/Click.wav").toExternalForm());
+
+
 
     @Override
     public void initialize(Stage stage, VirtualServer virtualServer, String nickname) {
@@ -186,6 +193,8 @@ public class WaitingRoom_Controller extends Controller {
      */
     @FXML
     public void onReadyClick() {
+        clickSound.play();
+
         PlayerColor selectedColor = cmbColor.getValue();
         if (selectedColor == null) {
             lblStatus.setText("Select a color!");
@@ -229,7 +238,7 @@ public class WaitingRoom_Controller extends Controller {
 
     private void startTetronimoAnimation() {
 
-        // immagine iniziale
+        //immagine iniziale
         imgTetronimo.setImage(new Image(
                 getClass().getResourceAsStream("/it/polimi/tetris/Support_images/Animation_J.png")
         ));

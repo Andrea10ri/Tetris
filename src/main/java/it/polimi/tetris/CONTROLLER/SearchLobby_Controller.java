@@ -5,14 +5,16 @@ import it.polimi.tetris.CONTROLLER.CommandsAndResponses.LoginCommand;
 import it.polimi.tetris.MODEL.ENUMS.DurationTime;
 import it.polimi.tetris.MODEL.Lobby;
 import it.polimi.tetris.VIEW.VirtualServer;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
+import java.util.Objects;
 
 public class SearchLobby_Controller extends Controller{
 
@@ -32,6 +34,33 @@ public class SearchLobby_Controller extends Controller{
     ListView<Lobby> lstLobbies;
     @FXML
     Button btnRefresh;
+
+    //audio
+    public static MediaPlayer lobbyBackground;
+    //click audio
+    private static final AudioClip clickSound = new AudioClip(Game_Controller.class.getResource("/it/polimi/tetris/Sounds/Click.wav").toExternalForm());
+
+
+
+    private void playMusic(String fileName) {
+        if (lobbyBackground != null) {
+            lobbyBackground.stop();
+        }
+
+        Media media = new Media(
+                Objects.requireNonNull(
+                        getClass().getResource("/it/polimi/tetris/Sounds/" + fileName)
+                ).toExternalForm()
+        );
+
+        lobbyBackground = new MediaPlayer(media);
+        lobbyBackground.setVolume(0.4);
+        lobbyBackground.play();
+    }
+
+    public MediaPlayer getMusicPlayer() {
+        return lobbyBackground;
+    }
 
     public Button getBtnJoinLobby() {
         return btnJoinLobby;
@@ -81,6 +110,8 @@ public class SearchLobby_Controller extends Controller{
     public void initialize(Stage stage, VirtualServer virtualServer, String nickname) {
         super.initialize(stage, virtualServer, nickname);
 
+        playMusic("SearchLobby.wav");
+
         lblWelcome.setText("Welcome " + nickname + "!");
         cmbNumOfPlayers.getItems().addAll(2, 3, 4);
         cmbDuration.getItems().addAll(5, 10, 30);
@@ -104,7 +135,7 @@ public class SearchLobby_Controller extends Controller{
                 duration.setStyle("-fx-font-size: 12px; -fx-text-fill: #555;");
                 players.setStyle("-fx-font-size: 12px; -fx-text-fill: #555;");
 
-                // Spaziatura e padding
+                //spaziatura
                 box.setSpacing(3);
                 box.setPadding(new Insets(6));
 
@@ -125,9 +156,11 @@ public class SearchLobby_Controller extends Controller{
 
                 if (empty || lobby == null) {
                     setGraphic(null);
-                } else {
 
-                    // SWITCH sulla durata
+                }
+                else {
+
+
                     String durationText;
                     switch (lobby.getDurationTime()) {
                         case FIVE_MINUTES -> durationText = "5 mins";
@@ -153,17 +186,20 @@ public class SearchLobby_Controller extends Controller{
     @FXML
     public void BtnOnRefreshClick()
     {
+        clickSound.play();
         // Send command to server
         LoginCommand cmd=new LoginCommand("GetLobbies", this.nickname);
         Gson gson=new Gson();
         String json=gson.toJson(cmd);
         this.virtualServer.Send(json);
 
+        btnJoinLobby.setDisable(true);
+
     }
 
     @FXML
     public void OnBtnCreateLobbyClick() {
-
+        clickSound.play();
         //le fasi che devo fare sono
         //1 prendo i dati dalle combobox, invio i dati al server
         //2 il server ci crea una lobby e la aggiunge alla lista
@@ -202,10 +238,11 @@ public class SearchLobby_Controller extends Controller{
 
     }
 
-
     @FXML
     public void OnBtnJoinClick()
     {
+
+        clickSound.play();
         Lobby selectedLobby = lstLobbies.getSelectionModel().getSelectedItem();
 
 
@@ -218,4 +255,28 @@ public class SearchLobby_Controller extends Controller{
 
     }
 
+    @FXML
+    public void OnListNumberClicked()
+    {
+        if(cmbDuration.getValue()!=null)
+        {
+            btnCreateLobby.setDisable(false);
+        }
+    }
+
+    @FXML
+    public void OnListDurationClicked()
+    {
+
+
+        if(cmbNumOfPlayers.getValue()!=null)
+        {
+            btnCreateLobby.setDisable(false);
+        }
+    }
+    @FXML
+    public void OnListLobbyClicked()
+    {   ;
+        btnJoinLobby.setDisable(false);
+    }
     }
