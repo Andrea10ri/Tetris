@@ -6,11 +6,11 @@ import it.polimi.tetris.MODEL.TetrisMatch;
 
 import java.util.List;
 
-public class MalusKalamako extends Effect {
+public class malusKalamako extends Effect {
 
     private int durationTime;
 
-    public MalusKalamako(String imageUrl, int durationTime) {
+    public malusKalamako(String imageUrl, int durationTime) {
         super(EffectType.MALUS, false, imageUrl);
         this.durationTime = durationTime;
     }
@@ -38,8 +38,8 @@ public class MalusKalamako extends Effect {
         for (TetrisMatch target : targets){
 
         //se esiste un bonus già attivato dello stesso tipo lo sostituisco
-        if (target.HasActiveEffect(MalusKalamako.class)) {
-            target.getActiveEffects().removeIf(e -> e instanceof MalusKalamako);
+        if (target.HasActiveEffect(malusKalamako.class)) {
+            target.getActiveEffects().removeIf(e -> e instanceof malusKalamako);
         }
 
         target.AddEffect(this);

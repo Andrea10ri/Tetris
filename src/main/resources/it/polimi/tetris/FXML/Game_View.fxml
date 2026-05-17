@@ -26,6 +26,10 @@
 
         <!-- Score e linee -->
         <HBox alignment="CENTER" spacing="20">
+            <VBox alignment="CENTER" prefHeight="95.0" prefWidth="49.0">
+                <Label style="-fx-font-size: 10px;" text="SCORE" textFill="WHITE" />
+                <Label fx:id="lblScore" style="-fx-font-size: 20px; -fx-font-weight: bold;" text="0" textFill="WHITE" />
+            </VBox>
             <VBox alignment="CENTER">
                 <Label style="-fx-font-size: 10px;" text="NEXT" textFill="WHITE" />
                 <Canvas fx:id="nextPiece" height="80" width="80" />
@@ -42,10 +46,6 @@
     <VBox fx:id="rankingContainer" alignment="TOP_CENTER" prefHeight="783.0" prefWidth="246.0" spacing="8" style="-fx-padding: 20;">
         <Label style="-fx-font-weight: bold; -fx-text-fill: white; -fx-font-size: 14px;" text="RANKING" />
         <VBox fx:id="rankingList" spacing="5" />
-         <VBox alignment="CENTER">
-             <Label style="-fx-font-size: 10px;" text="SCORE" textFill="WHITE" />
-             <Label fx:id="lblScore" style="-fx-font-size: 20px; -fx-font-weight: bold;" text="0" textFill="WHITE" />
-         </VBox>
     </VBox>
 
     <!-- DESTRA: board avversari -->

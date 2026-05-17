@@ -2,7 +2,7 @@ package it.polimi.tetris.MODEL;
 
 import it.polimi.tetris.MODEL.ENUMS.CellStatus;
 import it.polimi.tetris.MODEL.ENUMS.TetronimoColor;
-import it.polimi.tetris.MODEL.Effects.BonusBomb;
+import it.polimi.tetris.MODEL.Effects.bonusBomb;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +110,7 @@ public class TetrisBoard {
                     Effect eff = t.getEffect();
 
                     // SE È UNA BOMBA → salva la posizione
-                    if (eff instanceof BonusBomb bomb)
+                    if (eff instanceof bonusBomb bomb)
                         bomb.SetBombPosition(boardRow, boardCol);
 
                     gridTable[boardRow][boardCol].Occupy(t.getTetronimoColor(), eff);

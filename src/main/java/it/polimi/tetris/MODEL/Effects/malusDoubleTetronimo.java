@@ -6,10 +6,10 @@ import it.polimi.tetris.MODEL.TetrisMatch;
 
 import java.util.List;
 
-public class MalusDoubleTetronimo extends Effect {
+public class malusDoubleTetronimo extends Effect {
 
     // Constructor
-    public MalusDoubleTetronimo(String imageUrl) {
+    public malusDoubleTetronimo(String imageUrl) {
         super(EffectType.MALUS, false, imageUrl);
 
     }

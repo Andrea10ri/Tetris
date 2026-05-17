@@ -250,19 +250,18 @@ public class TetrisMatch {
 
     private Effect GenerateRandomEffect() {
         Random random = new Random();
-        int n = random.nextInt(9); //10 effetti totali (per ora)
-
+        int n = random.nextInt(9); //10 effetti totali(per ora)
         switch (n) {
-            case 0: return new BonusRemoveARow("bonusRemoveARow.png");
-            case 1: return new BonusSlowTimeFall("bonusSlowTimeFall.png", 20);
-            case 2: return new BonusDoublePoints("bonusDoublePoints.png", 60);
-            case 3: return new BonusBomb("bonusBomb.png");
-            case 4: return new MalusAdd1Row("malusAdd1Row.png");
-            case 5: return new MalusAdd2Rows("malusAdd2Rows.png");
-            case 6: return new MalusHalvePoints("malusHalvePoints.png");
+            case 0: return new bonusRemoveARow("bonusRemoveARow.png");
+            case 1: return new bonusSlowTimeFall("bonusSlowTimeFall.png", 20);
+            case 2: return new bonusDoublePoints("bonusDoublePoints.png", 60);
+            case 3: return new bonusBomb("bonusBomb.png");
+            case 4: return new malusAdd1Row("malusAdd1Row.png");
+            case 5: return new malusAdd2Rows("malusAdd2Rows.png");
+            case 6: return new malusHalvePoints("malusHalvePoints.png");
             //case 7: return new MalusDoubleTetronimo("malusDoubleTetronimo.png");
-            case 7: return new MalusKalamako("malusKalamako.png",20);
-            case 8: return new MalusReversedControls("malusReversedControls.png", 20);
+            case 7: return new malusKalamako("malusKalamako.png",20);
+            case 8: return new malusReversedControls("malusReversedControls.png", 20);
             default: return null;
         }
 
@@ -326,7 +325,7 @@ public class TetrisMatch {
     public void MoveLeft() {
 
         //malus reversed attivo
-        if (HasActiveEffect(MalusReversedControls.class) && !switched) {
+        if (HasActiveEffect(malusReversedControls.class) && !switched) {
             switched = true;
             MoveRight();
         }
@@ -349,7 +348,7 @@ public class TetrisMatch {
     }
 
     public void MoveRight() {
-        if (HasActiveEffect(MalusReversedControls.class) && !switched){
+        if (HasActiveEffect(malusReversedControls.class) && !switched){
             switched = true;
             MoveLeft();
         }
@@ -417,13 +416,13 @@ public class TetrisMatch {
             if (tickCounter % 2 == 0)
                 e.Tick();
 
-            if (e instanceof BonusDoublePoints) return ((BonusDoublePoints) e).IsExpired();
-            if (e instanceof BonusSlowTimeFall && ((BonusSlowTimeFall) e).IsExpired()) {
+            if (e instanceof bonusDoublePoints) return ((bonusDoublePoints) e).IsExpired();
+            if (e instanceof bonusSlowTimeFall && ((bonusSlowTimeFall) e).IsExpired()) {
                 this.setFallingVelocity(this.getFallingVelocity() / 2);
                 return true;
             }
-            if (e instanceof MalusKalamako) return ((MalusKalamako) e).IsExpired();
-            if (e instanceof MalusReversedControls) return ((MalusReversedControls) e).IsExpired();
+            if (e instanceof malusKalamako) return ((malusKalamako) e).IsExpired();
+            if (e instanceof malusReversedControls) return ((malusReversedControls) e).IsExpired();
             return false;
         });
     }
@@ -447,11 +446,11 @@ public class TetrisMatch {
             currentTetronimo = moved;
         } else {
             tetrisBoard.PlaceTetronimo(currentTetronimo);
-            activeEffects.removeIf(e -> e instanceof MalusDoubleTetronimo);
+            activeEffects.removeIf(e -> e instanceof malusDoubleTetronimo);
 
             int cleared = tetrisBoard.ClearFullRows();
             if (cleared > 0) {
-                if (HasActiveEffect(BonusDoublePoints.class))
+                if (HasActiveEffect(bonusDoublePoints.class))
                     AddScore(cleared * 2);
                 else
                     AddScore(cleared);

@@ -6,13 +6,12 @@ import it.polimi.tetris.MODEL.TetrisMatch;
 
 import java.util.List;
 
-public class BonusDoublePoints extends Effect {
-
+public class malusReversedControls extends Effect {
 
     private int durationTime;
-    // Constructor
-    public BonusDoublePoints(String imageUrl, int durationTime) {
-        super(EffectType.BONUS, false, imageUrl);
+
+    public malusReversedControls(String imageUrl, int durationTime) {
+        super(EffectType.MALUS, false, imageUrl);
         this.durationTime = durationTime;
     }
 
@@ -35,13 +34,14 @@ public class BonusDoublePoints extends Effect {
 
     @Override
     public void Apply(TetrisMatch source, List<TetrisMatch> targets) {
+        for (TetrisMatch target : targets){
 
-        //se esiste un bonus già attivato dello stesso tipo lo sostituisco
-        if (source.HasActiveEffect(BonusDoublePoints.class)) {
-            source.getActiveEffects().removeIf(e -> e instanceof BonusDoublePoints);
+            //se esiste un bonus già attivato dello stesso tipo lo sostituisco
+            if (target.HasActiveEffect(malusReversedControls.class)) {
+                target.getActiveEffects().removeIf(e -> e instanceof malusReversedControls);
+            }
+
+            target.AddEffect(this);
         }
-
-        source.AddEffect(this);
     }
-
 }

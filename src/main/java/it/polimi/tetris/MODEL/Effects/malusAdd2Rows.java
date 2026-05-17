@@ -7,23 +7,23 @@ import it.polimi.tetris.MODEL.TetrisMatch;
 import java.util.List;
 import java.util.Random;
 
-public class MalusHalvePoints extends Effect {
+public class malusAdd2Rows extends Effect {
 
     // Constructor
-    public MalusHalvePoints(String imageUrl) {
+    public malusAdd2Rows(String imageUrl) {
         super(EffectType.MALUS, false, imageUrl);
+
     }
 
     @Override
     public void Apply(TetrisMatch source, List<TetrisMatch> targets) {
-
         if (targets == null || targets.isEmpty()) return;
 
         Random random = new Random();
         int n = random.nextInt(targets.size());
 
         TetrisMatch target = targets.get(n);
-        target.HalveScore();
-
+        target.getTetrisBoard().AddGarbageRow();
+        target.getTetrisBoard().AddGarbageRow();
     }
 }

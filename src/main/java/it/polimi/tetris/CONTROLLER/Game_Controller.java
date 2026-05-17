@@ -76,7 +76,7 @@ public class Game_Controller extends Controller{
         );
 
         MediaPlayer sfx = new MediaPlayer(media);
-        sfx.setVolume(1);
+        sfx.setVolume(0.8);
         sfx.play();
 
         sfx.setOnEndOfMedia(sfx::dispose);
@@ -394,7 +394,7 @@ public class Game_Controller extends Controller{
         if (response.getActiveEffectInfos() == null) return false;
 
         for (GameResponse.ActiveEffectInfo info : response.getActiveEffectInfos()) {
-            if ("MalusKalamako".equals(info.getEffectName()))
+            if ("malusKalamako".equals(info.getEffectName()))
                 return true;
         }
         return false;
@@ -449,7 +449,6 @@ public class Game_Controller extends Controller{
 
     private void DrawEffectCell(GraphicsContext gc, int row, int col, int cellSize, String effectName) {
         if (row < 0 || row >= ROWS || col < 0 || col >= COLS) return;
-
 
         // icona effetto
         Image icon = GetEffectIcon(effectName);
@@ -564,16 +563,16 @@ public class Game_Controller extends Controller{
 
     private String IntToEffectName(int code) {
         return switch (code) {
-            case 1 -> "BonusDoublePoints";
-            case 2 -> "BonusRemoveARow";
-            case 3 -> "BonusBomb";
-            case 4 -> "BonusSlowTimeFall";
-            case 5 -> "MalusAdd1Row";
-            case 6 -> "MalusAdd2Rows";
-            case 7 -> "MalusHalvePoints";
-            case 8 -> "MalusKalamako";
-            case 9 -> "MalusReversedControls";
-            case 10 -> "MalusDoubleTetronimo";
+            case 1 -> "bonusDoublePoints";
+            case 2 -> "bonusRemoveARow";
+            case 3 -> "bonusBomb";
+            case 4 -> "bonusSlowTimeFall";
+            case 5 -> "malusAdd1Row";
+            case 6 -> "malusAdd2Rows";
+            case 7 -> "malusHalvePoints";
+            case 8 -> "malusKalamako";
+            case 9 -> "malusReversedControls";
+            case 10 -> "malusDoubleTetronimo";
             default -> null;
         };
     }

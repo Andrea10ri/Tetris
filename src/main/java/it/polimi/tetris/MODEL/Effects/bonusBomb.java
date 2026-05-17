@@ -3,18 +3,25 @@ package it.polimi.tetris.MODEL.Effects;
 import it.polimi.tetris.MODEL.ENUMS.EffectType;
 import it.polimi.tetris.MODEL.Effect;
 import it.polimi.tetris.MODEL.TetrisMatch;
+
 import java.util.List;
 
-//the bottom row of the grid will be removed
-public class BonusRemoveARow extends Effect {
+public class bonusBomb extends Effect {
 
-    // Constructor
-    public BonusRemoveARow(String imageUrl) {
+    private int bombRow;
+    private int bombCol;
+
+    public bonusBomb(String imageUrl) {
         super(EffectType.BONUS, false, imageUrl);
+    }
+
+    public void SetBombPosition(int row, int col) {
+        this.bombRow = row;
+        this.bombCol = col;
     }
 
     @Override
     public void Apply(TetrisMatch source, List<TetrisMatch> targets) {
-        source.getTetrisBoard().RemoveBottomRow();
+        source.getTetrisBoard().ExplodeCells(bombRow, bombCol, 1);
     }
 }

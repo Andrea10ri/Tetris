@@ -7,10 +7,10 @@ import it.polimi.tetris.MODEL.TetrisMatch;
 import java.util.List;
 import java.util.Random;
 
-public class MalusAdd2Rows extends Effect {
+public class malusAdd1Row extends Effect {
 
     // Constructor
-    public MalusAdd2Rows(String imageUrl) {
+    public malusAdd1Row(String imageUrl) {
         super(EffectType.MALUS, false, imageUrl);
 
     }
@@ -20,10 +20,9 @@ public class MalusAdd2Rows extends Effect {
         if (targets == null || targets.isEmpty()) return;
 
         Random random = new Random();
-        int n = random.nextInt(targets.size());
+        int n = random.nextInt(targets.size()); // senza +1
 
         TetrisMatch target = targets.get(n);
-        target.getTetrisBoard().AddGarbageRow();
         target.getTetrisBoard().AddGarbageRow();
     }
 }

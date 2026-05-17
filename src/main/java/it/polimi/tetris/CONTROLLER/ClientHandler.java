@@ -429,14 +429,14 @@ public class ClientHandler implements Runnable {
 
         ArrayList<GameResponse.ActiveEffectInfo> effectInfos = new ArrayList<>();
         for (Effect e : match.getActiveEffects()) {
-            if (e instanceof BonusDoublePoints bdp)
-                effectInfos.add(new GameResponse.ActiveEffectInfo("BonusDoublePoints", bdp.getDurationTime(), 60));
-            else if (e instanceof BonusSlowTimeFall bsf)
-                effectInfos.add(new GameResponse.ActiveEffectInfo("BonusSlowTimeFall", bsf.getDurationTime(), 20));
-            else if (e instanceof MalusKalamako mk)
-                effectInfos.add(new GameResponse.ActiveEffectInfo("MalusKalamako", mk.getDurationTime(), 20));
-            else if (e instanceof MalusReversedControls mrc)
-                effectInfos.add(new GameResponse.ActiveEffectInfo("MalusReversedControls", mrc.getDurationTime(), 20));
+            if (e instanceof bonusDoublePoints bdp)
+                effectInfos.add(new GameResponse.ActiveEffectInfo("bonusDoublePoints", bdp.getDurationTime(), 60));
+            else if (e instanceof bonusSlowTimeFall bsf)
+                effectInfos.add(new GameResponse.ActiveEffectInfo("bonusSlowTimeFall", bsf.getDurationTime(), 20));
+            else if (e instanceof malusKalamako mk)
+                effectInfos.add(new GameResponse.ActiveEffectInfo("malusKalamako", mk.getDurationTime(), 20));
+            else if (e instanceof malusReversedControls mrc)
+                effectInfos.add(new GameResponse.ActiveEffectInfo("malusReversedControls", mrc.getDurationTime(), 20));
         }
         gs.setActiveEffectInfos(effectInfos);
 
@@ -549,16 +549,16 @@ public class ClientHandler implements Runnable {
     }
 
     private int ColorToEffectInt(Effect effect) {
-        if (effect instanceof BonusDoublePoints) return 1;
-        if (effect instanceof BonusRemoveARow) return 2;
-        if (effect instanceof BonusBomb) return 3;
-        if (effect instanceof BonusSlowTimeFall) return 4;
-        if (effect instanceof MalusAdd1Row) return 5;
-        if (effect instanceof MalusAdd2Rows) return 6;
-        if (effect instanceof MalusHalvePoints) return 7;
-        if (effect instanceof MalusKalamako) return 8;
-        if (effect instanceof MalusReversedControls) return 9;
-        if (effect instanceof MalusDoubleTetronimo) return 10;
+        if (effect instanceof bonusDoublePoints) return 1;
+        if (effect instanceof bonusRemoveARow) return 2;
+        if (effect instanceof bonusBomb) return 3;
+        if (effect instanceof bonusSlowTimeFall) return 4;
+        if (effect instanceof malusAdd1Row) return 5;
+        if (effect instanceof malusAdd2Rows) return 6;
+        if (effect instanceof malusHalvePoints) return 7;
+        if (effect instanceof malusKalamako) return 8;
+        if (effect instanceof malusReversedControls) return 9;
+        if (effect instanceof malusDoubleTetronimo) return 10;
         return 0;
     }
 }
