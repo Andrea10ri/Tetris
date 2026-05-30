@@ -251,6 +251,8 @@ public class ClientThread extends Thread {
                 Platform.runLater(() -> {
                     Game_Controller gameController = (Game_Controller) fxmlLoader.getController();
                     gameController.RenderGameState(gameResponse);
+                    if (gameResponse.getAttackerNickname() != null)
+                        gameController.ShowMalusAlert(gameResponse.getAttackerNickname());
                 });
                 break;
 

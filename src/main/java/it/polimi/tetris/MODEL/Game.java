@@ -167,10 +167,14 @@ public class Game {
         //i malus si applicano agli avversari
         else {
             List<TetrisMatch> opponents = Players.stream()
-                    .filter(p -> p != source)//escludo me stesso
-                    .filter(p -> !p.getTetrisMatch().getTetrisBoard().IsGameOver()) //escludo i game over
+                    .filter(p -> p != source)
+                    .filter(p -> !p.getTetrisMatch().getTetrisBoard().IsGameOver())
                     .map(Player::getTetrisMatch)
                     .collect(Collectors.toList());
+
+            //imposta l'attaccante su tutti i target
+            for (TetrisMatch target : opponents)
+                target.setLastAttacker(source.getNickname());
 
             effect.Apply(source.getTetrisMatch(), opponents);
         }

@@ -458,6 +458,9 @@ public class ClientHandler implements Runnable {
         gs.setOpponentBoards(opBoards);
 
 
+        gs.setAttackerNickname(match.getLastAttacker());
+        match.setLastAttacker(null);
+
         SendResponse(gs);
     }
 

@@ -29,6 +29,7 @@ public class TetrisMatch {
     private Consumer<Effect> onEffectTriggered;    //avvisa Game di quale effetto è stato triggerato
     private Consumer<TetrisMatch> onGameOver;      //avvisa Game che questo giocatore è in game over
     private boolean switched= false;
+    private String lastAttacker;
 
     public TetrisMatch(TetrisBoard tetrisBoard, Tetronimo currentTetronimo, Tetronimo nextTetronimo, int fallingVelocity, int score, ArrayList<Effect> activeEffects) {
         this.tetrisBoard = tetrisBoard;
@@ -104,6 +105,10 @@ public class TetrisMatch {
     public void setOnGameOver(Consumer<TetrisMatch> callback) {
         this.onGameOver = callback;
     }
+
+
+    public String getLastAttacker() { return lastAttacker; }
+    public void setLastAttacker(String lastAttacker) { this.lastAttacker = lastAttacker; }
 
     //Methods
     //Generating the next tetronimo in queue randomly

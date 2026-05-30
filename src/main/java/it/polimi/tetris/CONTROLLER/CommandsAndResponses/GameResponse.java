@@ -44,7 +44,9 @@ public class GameResponse extends Response {
     public void setEffectCells(ArrayList<int[]> effectCells) { this.effectCells = effectCells; }
     public ArrayList<int[]> getEffectCells() { return effectCells; }
 
-
+    private String attackerNickname;
+    public String getAttackerNickname() { return attackerNickname; }
+    public void setAttackerNickname(String attackerNickname) { this.attackerNickname = attackerNickname; }
 
     public GameResponse() {}
 

@@ -51,6 +51,9 @@ public class Game_Controller extends Controller{
     private MediaPlayer musicPlayer;
     private PlayerColor playerColor;
     private boolean isgameover = false;
+
+    private boolean showingMalusAlert = false;
+
     private boolean ost2 = false;
     private boolean ost3 = false;
 
@@ -601,6 +604,60 @@ public class Game_Controller extends Controller{
             for (int c = 0; c < COLS; c++)
                 gc.strokeRect(c * MINI_CELL, r * MINI_CELL, MINI_CELL, MINI_CELL);
     }
+
+
+
+
+    public void ShowMalusAlert(String attackerNickname) {
+        if (showingMalusAlert) return;
+        showingMalusAlert = true;
+
+        //timeline che fa pulsare l'intensità del banner
+        javafx.animation.Timeline alertTimeline = new javafx.animation.Timeline();
+
+        //4 cicli per far durare 2 secondi
+        for (int i = 0; i < 4; i++) {
+            final double alpha = (i % 2 == 0) ? 0.85 : 0.4; // alterna intensità
+            final int cycle = i;
+            alertTimeline.getKeyFrames().add(
+                    new javafx.animation.KeyFrame(
+                            javafx.util.Duration.millis(i * 500),
+                            e -> DrawMalusBanner(attackerNickname, alpha)
+                    )
+            );
+        }
+
+        //tolgo il banner
+        alertTimeline.setOnFinished(e -> {
+            showingMalusAlert = false;
+        });
+
+        alertTimeline.play();
+    }
+    private void DrawMalusBanner(String attackerNickname, double alpha) {
+        GraphicsContext gc = mainBoard.getGraphicsContext2D();
+
+        double bannerHeight = 35;
+
+        //sfondo rosso sottile in alto
+        gc.setFill(Color.web("#ff0000", alpha * 0.7));
+        gc.fillRect(0, 0, mainBoard.getWidth(), bannerHeight);
+
+        //bordo lampeggiante
+        gc.setStroke(Color.web("#ff4455", alpha));
+        gc.setLineWidth(2);
+        gc.strokeRect(1, 1, mainBoard.getWidth() - 2, bannerHeight - 2);
+
+        // testo
+        gc.setFill(Color.web("#ffffff", alpha));
+        gc.setFont(Font.font("Courier New", FontWeight.BOLD, 16));
+        gc.setTextAlign(javafx.scene.text.TextAlignment.CENTER);
+        gc.fillText("MALUS FROM " + attackerNickname.toUpperCase(),
+                mainBoard.getWidth() / 2,
+                bannerHeight / 2 + 5);
+    }
+
+
 
     //metodo che prende dal ranking info nome e colore e mostra la classifica finale
     public void ShowWinner(ArrayList<String> rankingInfo) {
