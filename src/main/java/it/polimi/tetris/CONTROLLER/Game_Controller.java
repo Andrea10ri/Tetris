@@ -51,6 +51,8 @@ public class Game_Controller extends Controller{
     private MediaPlayer musicPlayer;
     private PlayerColor playerColor;
     private boolean isgameover = false;
+    private boolean ost2 = false;
+    private boolean ost3 = false;
 
     private void playMusic(String fileName) {
         if (musicPlayer != null) {
@@ -281,6 +283,19 @@ public class Game_Controller extends Controller{
 
         lblTimer.setText(FormatTime(response.getRemainingTime()));
         lblPhase.setText("PHASE " + response.getPhase());
+
+        if(response.getPhase()==2 && ost2 ==false){
+             ost2=true;
+            playMusic("Tetris_OST2.wav");
+        }
+
+        else if(response.getPhase()==3 && ost3 ==false)
+        {
+                ost3=true;
+                playMusic("Tetris_OST3.wav");
+
+        }
+
 
         //ridisegna sfondo e griglia
         InitializeMainBoard(playerColor);
