@@ -3,14 +3,17 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: radial-gradient(center 50% 50%, radius 80%, #3B6956, #22282E);" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.tetris.CONTROLLER.Login_Controller">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: radial-gradient(center 50% 50%, radius 80%, #130557, #070124);" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.tetris.CONTROLLER.Login_Controller">
    <children>
+
       <Pane prefHeight="400.0" prefWidth="600.0">
          <children>
             <Button fx:id="btnInsertNick" layoutX="394.0" layoutY="252.0" mnemonicParsing="false" onAction="#onInsertNicknameClick" prefHeight="25.0" prefWidth="149.0" text="Enter" />
             <TextField fx:id="txtNickname" layoutX="394.0" layoutY="188.0" />
             <Separator layoutX="299.0" layoutY="55.0" opacity="0.21" orientation="VERTICAL" prefHeight="309.0" prefWidth="4.0" />
             <Label fx:id="lblNickname" layoutX="413.0" layoutY="156.0" text="Insert your nickname" textFill="WHITE" />
+      
+            <Pane fx:id="logoContainer" layoutX="14.0" layoutY="83.0" prefHeight="253.0" prefWidth="278.0" />
          </children></Pane>
    </children>
 </AnchorPane>
