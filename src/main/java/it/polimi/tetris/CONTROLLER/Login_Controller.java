@@ -68,15 +68,15 @@ public class Login_Controller extends Controller{
 
                 Label e = new Label("E");
                 e.setFont(Font.font("Consolas", FontWeight.EXTRA_BOLD, 64));
-                e.setTextFill(Color.PURPLE);
+                e.setTextFill(Color.ORANGE);
 
                 Label t2 = new Label("T");
                 t2.setFont(Font.font("Consolas", FontWeight.EXTRA_BOLD, 64));
-                t2.setTextFill(Color.RED);
+                t2.setTextFill(Color.YELLOW);
 
                 Label r = new Label("R");
                 r.setFont(Font.font("Consolas", FontWeight.EXTRA_BOLD, 64));
-                r.setTextFill(Color.ORANGE);
+                r.setTextFill(Color.GREEN);
 
                 Label i = new Label("I");
                 i.setFont(Font.font("Consolas", FontWeight.EXTRA_BOLD, 64));
@@ -84,7 +84,7 @@ public class Login_Controller extends Controller{
 
                 Label s = new Label("S");
                 s.setFont(Font.font("Consolas", FontWeight.EXTRA_BOLD, 64));
-                s.setTextFill(Color.YELLOW);
+                s.setTextFill(Color.PURPLE);
 
 
                 HBox titleBox = new HBox(5); //4px di spazio tra lettere
@@ -94,7 +94,7 @@ public class Login_Controller extends Controller{
                 logoContainer.getChildren().add(titleBox);
 
 /////////////////////
-                // "1" = I-piece verticale (1 colonna x 4 righe)
+
                 Group one = BuildBlockGroup(
                         new int[][]{
                                 {1, 1},{0, 1},{0, 1}}, Color.CYAN, CELL);

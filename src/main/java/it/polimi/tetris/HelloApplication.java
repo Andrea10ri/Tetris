@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -44,6 +45,8 @@ public class HelloApplication extends Application {
         this.virtualServer.setStage(stage);
 
         stage.setTitle("Tetris");
+        Image icon = new Image(getClass().getResourceAsStream("/it/polimi/tetris/Support_images/Icon.png"));
+        stage.getIcons().add(icon);
 
 
         // Set view
